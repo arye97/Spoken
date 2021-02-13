@@ -5,7 +5,7 @@ import SearchBox from "./searchbox";
 import '../src/index.css';
 
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ5ZTk3IiwiYSI6ImNra3A2Nmx5dTFtZWQyd29jbDE1c2M1a3gifQ.oTlYhKLVFhPHU17SffuotQ';
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ5ZTk3IiwiYSI6ImNra3A2Nmx4aDA1cm8ycW55OGRsb3c3aGgifQ.lSJZo_t8Ya7KFWQJynPVmQ';
 
 
 class Application extends React.Component {
@@ -40,9 +40,9 @@ class Application extends React.Component {
         return (
             <div>
                 <div style={{
-                    width:'30%',
+                    width:'480px',
                     paddingTop: '1%',
-                    paddingLeft: '1.5%',
+                    paddingLeft: '2.5%',
                     marginRight: '-10.5%',
                     float: 'left',
                     display: 'inline-flex',
@@ -60,8 +60,9 @@ class Application extends React.Component {
                     <div style={{
                         padding: '2.5%',
                         margin: '1.5%',
-                        marginTop:'1.5%',
-                        width: '60%'
+                        marginTop: '1px',
+                        textAlign: 'right',
+                        width: '100%'
                     }}>
                         <SearchBox />
                     </div>
