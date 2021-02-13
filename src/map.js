@@ -186,10 +186,14 @@ class Map extends React.Component {
                                 console.log(countries);
                                 //ToDo: Dye the countries we've found
                                 this.dyeCountries(countries);
-                                if (countries.length > 1) {
+                                if (countries.length > 1 ) {
                                     //ToDo: triangulate position in middle of the countries that speak it
                                     this.findMiddleGround(countries);
-                                    this.panToCountry(3);
+                                    let zoom = 4;
+                                    if (countries.length > 5) {
+                                        zoom = 2.5;
+                                    }
+                                    this.panToCountry(zoom);
                                 } else if (countries[0] != null) {
                                     let latlng = countries[0].latlng;
                                     console.log(latlng);
