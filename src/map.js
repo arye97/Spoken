@@ -192,7 +192,8 @@ class Map extends React.Component {
                                     this.panToCountry(3);
                                 } else if (countries[0] != null) {
                                     let latlng = countries[0].latlng;
-                                    this.setState({lng: latlng[0], lat:  latlng[1]})
+                                    console.log(latlng);
+                                    this.setState({lng: latlng[1], lat:  latlng[0]})
                                     this.panToCountry(6);
                                 } else {
                                     Dropdown.text = "Can't find country";
