@@ -64,3 +64,9 @@
   font-size: x-large;
   z-index: 9;
 }
+
+.introModalButton {
+  padding: 100%;
+  margin: 100%;
+  bottom: 100%;
+}

@@ -7,15 +7,19 @@ import 'semantic-ui-css/semantic.min.css';
 import axios from "axios";
 import {languageOptions} from '../src/constants';
 
+import IntroModal from "./introModal"; // Import css
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ5ZTk3IiwiYSI6ImNra3A2Nmx4aDA1cm8ycW55OGRsb3c3aGgifQ.lSJZo_t8Ya7KFWQJynPVmQ';
 
 class Map extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
             lng: this.props.lng,
             lat: this.props.lat,
-            zoom: 0
+            zoom: 0,
+            showDialog: true
         };
         this.map = null;
     }
@@ -26,7 +30,6 @@ class Map extends React.Component {
             style: 'mapbox://styles/mapbox/streets-v11',
             center: [this.state.lng, this.state.lat],
             zoom: this.state.zoom
-
         });
 
         this.map.on('move', () => {
@@ -39,21 +42,6 @@ class Map extends React.Component {
 
     }
 
-
-
-    // getLargestCountry(countryInfo) {
-    //     let largestCountryIndex = 0;
-    //
-    //     for (let i = 0; i < countryInfo.length; i++) {
-    //         if (countryInfo[i].population > countryInfo[largestCountryIndex].population) {
-    //             largestCountryIndex = i;
-    //         }
-    //     }
-    //     console.log(largestCountryIndex);
-    //     return countryInfo[largestCountryIndex];
-    //
-    // }
-
     /**
      * Needs to be a
      * @param language (the ISO code)
@@ -63,12 +51,7 @@ class Map extends React.Component {
         let url = 'https://restcountries.eu/rest/v2/lang/' + language;
         let currentCountryInfo = await axios.get(url);
         console.log(currentCountryInfo);
-        // let largestCountry = this.getLargestCountry(currentCountryInfo.data);
-        // let latlng = largestCountry.latlng; //language may belong to multiple countries, just test with first one
-        // // this.moveToCountry(latlng[0], latlng[1]);
-        // this.setState({lat: latlng[0], lng:  latlng[1]})
         return currentCountryInfo.data;
-
     }
 
     findLanguageISO(language) {
@@ -79,19 +62,16 @@ class Map extends React.Component {
             }
         }
     }
+
     panToCountry(zoom) {
-        // this.map.set();
-        console.log(this.state);
         this.map.flyTo({
             center: [
                 this.state.lng, this.state.lat
             ],
             zoom : zoom,
-            essential: true // this animation is considered essential with respect to prefers-reduced-motion
+            essential: true
         });
-        console.log("crashed");
     }
-
 
     /**
      * Find the center of the countries that speak the language
@@ -135,8 +115,11 @@ class Map extends React.Component {
         let countryStops = ["in",
             "iso_3166_1_alpha_3"]
         for (let i = 0; i < countryData.length; i++) {
-            countryStops.push(countryData[i].alpha3Code);
+            if (countryData[i].name !== 'Antarctica') {
+                countryStops.push(countryData[i].alpha3Code);
+            }
         }
+        console.log(countryStops);
         //this line is stupid but necessary
         if (this.map.getLayer('country-boundaries') || this.map.getSource('country-boundaries')) { this.map.removeLayer('country-boundaries'); this.map.removeSource('country-boundaries')}
 
@@ -163,12 +146,34 @@ class Map extends React.Component {
         }
     }
 
+    async getCountryWikiInfo(countryData) {
+        let allCountries = [];
+        for (let i = 0; i < countryData.length; i++) {
+            let url = 'https://en.wikipedia.org/w/api.php?origin=*&format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=' + countryData[i].name;
+            console.log(url);
+            let currentCountryInfo = await axios.get(url, {
+                method: 'GET'
+            });
+            console.log(currentCountryInfo.data.query.pages);
+            let keys =  Object.keys(currentCountryInfo.data.query.pages)[0];
+            console.log(keys);
+            allCountries.push(currentCountryInfo.extract);
+        }
+        console.log(allCountries);
+        return allCountries;
+    }
+
     render() {
         return (
             <div>
+
                 <div className={'searchBoxParent'}>
                     <h2 className={'titleSpoken'}>Spoken</h2>
                     <div className={'searchBox'} id={'searchBox'}>
+                        <IntroModal />
+                        <br/>
+                        <hr/>
+
                         <Dropdown
                             id={'languageOptions'}
                             button
@@ -184,6 +189,7 @@ class Map extends React.Component {
                                 let isoCode = this.findLanguageISO(e.target.textContent);
                                 let countries = await this.getLanguageCountries(isoCode);
                                 console.log(countries);
+                                //let countryWikiInformation = await this.getCountryWikiInfo(countries);
                                 //ToDo: Dye the countries we've found
                                 this.dyeCountries(countries);
                                 if (countries.length > 1 ) {
@@ -205,10 +211,14 @@ class Map extends React.Component {
                             }}
                         />
                     </div>
+
                 </div>
                 <div ref={el => this.mapContainer = el}
                      className={'mapContainer'}
                 />
+
+
+
             </div>
         )
     }
