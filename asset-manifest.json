@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/Spoken/static/css/main.fa3e7bfc.chunk.css",
+    "main.js": "/Spoken/static/js/main.f527acdd.chunk.js",
+    "main.js.map": "/Spoken/static/js/main.f527acdd.chunk.js.map",
+    "runtime-main.js": "/Spoken/static/js/runtime-main.4637b051.js",
+    "runtime-main.js.map": "/Spoken/static/js/runtime-main.4637b051.js.map",
+    "static/css/2.9926414e.chunk.css": "/Spoken/static/css/2.9926414e.chunk.css",
+    "static/js/2.85ca99de.chunk.js": "/Spoken/static/js/2.85ca99de.chunk.js",
+    "static/js/2.85ca99de.chunk.js.map": "/Spoken/static/js/2.85ca99de.chunk.js.map",
+    "index.html": "/Spoken/index.html",
+    "static/css/2.9926414e.chunk.css.map": "/Spoken/static/css/2.9926414e.chunk.css.map",
+    "static/css/main.fa3e7bfc.chunk.css.map": "/Spoken/static/css/main.fa3e7bfc.chunk.css.map",
+    "static/js/2.85ca99de.chunk.js.LICENSE.txt": "/Spoken/static/js/2.85ca99de.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/Spoken/static/media/VeganStylePersonalUse-5Y58.0aec18fe.ttf",
+    "static/media/semantic.min.css": "/Spoken/static/media/outline-icons.ddae9b1b.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4637b051.js",
+    "static/css/2.9926414e.chunk.css",
+    "static/js/2.85ca99de.chunk.js",
+    "static/css/main.fa3e7bfc.chunk.css",
+    "static/js/main.f527acdd.chunk.js"
+  ]
+}
