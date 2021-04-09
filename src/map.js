@@ -49,9 +49,9 @@ class Map extends React.Component {
      */
     async getLanguageCountries(language) {
         let url = 'https://restcountries.eu/rest/v2/lang/' + language;
-        let currentCountryInfo = await axios.get(url);
+        let currentCountryInfo = await axios.get(url).catch((e) => {return null});
         console.log(currentCountryInfo);
-        return currentCountryInfo.data;
+        return (currentCountryInfo ? currentCountryInfo.data : null);
     }
 
     findLanguageISO(language) {
@@ -150,23 +150,74 @@ class Map extends React.Component {
         let allCountries = [];
         for (let i = 0; i < countryData.length; i++) {
             let url = 'https://en.wikipedia.org/w/api.php?origin=*&format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=' + countryData[i].name;
-            console.log(url);
             let currentCountryInfo = await axios.get(url, {
                 method: 'GET'
             });
-            console.log(currentCountryInfo.data.query.pages);
             let keys =  Object.keys(currentCountryInfo.data.query.pages)[0];
-            console.log(keys);
             allCountries.push(currentCountryInfo.extract);
         }
-        console.log(allCountries);
         return allCountries;
+    }
+
+    // addInfoWindows(countries) {
+    //     console.log(countries);
+    //     for (let i = 0; i < countries.length; i++) {
+    //
+    //         console.log(countries[i]);
+    //         let countryLatLng = {lat: countries[i].latlng[0],
+    //                              lng: countries[i].latlng[1]};
+    //
+    //         let popup = new mapboxgl.Popup({
+    //             closeButton: false,
+    //             closeOnClick: false,
+    //             layout: {
+    //                 'icon-image': 'custom-marker',
+    //                 'icon-allow-overlap': true
+    //             }
+    //         });
+    //
+    //         this.map.on('mouseenter', 'country_boundaries', function (e) {
+    //             let description = "<strong>Truckeroo</strong><p>Test</p>";
+    //             popup.setLngLat(countryLatLng).setHTML(description).addTo(this.map);
+    //         });
+    //         this.map.loadImage(
+    //             'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+    //             function (error, image) {
+    //                 if (error) throw error;
+    //                 this.map.addImage('custom-marker', image);});
+    //
+    //     }
+    // }
+
+    async dropdownOnChange(e, options) {
+        let isoCode = this.findLanguageISO(e.target.textContent);
+        let countries = await this.getLanguageCountries(isoCode);
+
+        if (countries != null) {
+            if (countries.length > 1) {
+                this.dyeCountries(countries);
+                this.findMiddleGround(countries);
+                let zoom = 4;
+                if (countries.length > 5) {
+                    zoom = 2.5;
+                }
+                this.panToCountry(zoom);
+            } else {
+                this.dyeCountries(countries);
+                let latlng = countries[0].latlng;
+                this.setState({lng: latlng[1], lat: latlng[0]})
+                this.panToCountry(6);
+            }
+            this.addInfoWindows(countries);
+        } else {
+            Dropdown.text = "Can't find country";
+        }
+
     }
 
     render() {
         return (
             <div>
-
                 <div className={'searchBoxParent'}>
                     <h2 className={'titleSpoken'}>Spoken</h2>
                     <div className={'searchBox'} id={'searchBox'}>
@@ -186,28 +237,7 @@ class Map extends React.Component {
                             placeholder="Select Language"
                             text={Dropdown.text}
                             onChange={async (e, {value}) => {
-                                let isoCode = this.findLanguageISO(e.target.textContent);
-                                let countries = await this.getLanguageCountries(isoCode);
-                                console.log(countries);
-                                //let countryWikiInformation = await this.getCountryWikiInfo(countries);
-                                //ToDo: Dye the countries we've found
-                                this.dyeCountries(countries);
-                                if (countries.length > 1 ) {
-                                    //ToDo: triangulate position in middle of the countries that speak it
-                                    this.findMiddleGround(countries);
-                                    let zoom = 4;
-                                    if (countries.length > 5) {
-                                        zoom = 2.5;
-                                    }
-                                    this.panToCountry(zoom);
-                                } else if (countries[0] != null) {
-                                    let latlng = countries[0].latlng;
-                                    console.log(latlng);
-                                    this.setState({lng: latlng[1], lat:  latlng[0]})
-                                    this.panToCountry(6);
-                                } else {
-                                    Dropdown.text = "Can't find country";
-                                }
+                                await this.dropdownOnChange(e, value);
                             }}
                         />
                     </div>
