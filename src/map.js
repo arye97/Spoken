@@ -7,7 +7,8 @@ import 'semantic-ui-css/semantic.min.css';
 import axios from "axios";
 import {languageOptions} from '../src/constants';
 
-import IntroModal from "./introModal"; // Import css
+import IntroModal from "./introModal";
+import {render} from "@testing-library/react"; // Import css
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ5ZTk3IiwiYSI6ImNra3A2Nmx4aDA1cm8ycW55OGRsb3c3aGgifQ.lSJZo_t8Ya7KFWQJynPVmQ';
 
@@ -48,9 +49,8 @@ class Map extends React.Component {
      * @returns {Promise<any>} the countries data - all countries return data
      */
     async getLanguageCountries(language) {
-        let url = 'https://restcountries.eu/rest/v2/lang/' + language;
+        let url = 'https://restcountries.com/v2/lang/' + language;
         let currentCountryInfo = await axios.get(url).catch((e) => {return null});
-        console.log(currentCountryInfo);
         return (currentCountryInfo ? currentCountryInfo.data : null);
     }
 
@@ -83,18 +83,20 @@ class Map extends React.Component {
         let y = 0.0;
         let z = 0.0;
         for (let i = 0; i < countryData.length; i++) {
-            let latitude = countryData[i].latlng[0] * Math.PI / 180;
-            let longitude = countryData[i].latlng[1] * Math.PI / 180;
-            let nx = x + Math.cos(latitude) * Math.cos(longitude);
-            let ny = y + Math.cos(latitude) * Math.sin(longitude);
-            let nz = z + Math.sin(latitude);
-            if (!isNaN(nx) && !isNaN(ny) && !isNaN(nz)) {
-                x = nx;
-                y = ny;
-                z = nz;
-            } else {
-                break;
-            }
+            if (countryData[i].latlng !== undefined) {
+                let latitude = countryData[i].latlng[0] * Math.PI / 180;
+                let longitude = countryData[i].latlng[1] * Math.PI / 180;
+                let nx = x + Math.cos(latitude) * Math.cos(longitude);
+                let ny = y + Math.cos(latitude) * Math.sin(longitude);
+                let nz = z + Math.sin(latitude);
+                if (!isNaN(nx) && !isNaN(ny) && !isNaN(nz)) {
+                    x = nx;
+                    y = ny;
+                    z = nz;
+                } else {
+                    break;
+                }
+            }            
         }
 
         let total = countryData.length;
@@ -119,11 +121,11 @@ class Map extends React.Component {
                 countryStops.push(countryData[i].alpha3Code);
             }
         }
-        console.log(countryStops);
         //this line is stupid but necessary
         if (this.map.getLayer('country-boundaries') || this.map.getSource('country-boundaries')) { this.map.removeLayer('country-boundaries'); this.map.removeSource('country-boundaries')}
 
         if (this.map.getLayer('country-boundaries') === undefined) {
+            
             this.map.addLayer(
                 {
                     id: 'country-boundaries',
@@ -140,7 +142,7 @@ class Map extends React.Component {
                 },
                 'country-label'
             );
-
+            
             this.map.setFilter('country-boundaries', countryStops);
 
         }
@@ -153,41 +155,34 @@ class Map extends React.Component {
             let currentCountryInfo = await axios.get(url, {
                 method: 'GET'
             });
-            let keys =  Object.keys(currentCountryInfo.data.query.pages)[0];
+         //   let keys =  Object.keys(currentCountryInfo.data.query.pages)[0];
             allCountries.push(currentCountryInfo.extract);
         }
         return allCountries;
     }
 
-    // addInfoWindows(countries) {
-    //     console.log(countries);
-    //     for (let i = 0; i < countries.length; i++) {
-    //
-    //         console.log(countries[i]);
-    //         let countryLatLng = {lat: countries[i].latlng[0],
-    //                              lng: countries[i].latlng[1]};
-    //
-    //         let popup = new mapboxgl.Popup({
-    //             closeButton: false,
-    //             closeOnClick: false,
-    //             layout: {
-    //                 'icon-image': 'custom-marker',
-    //                 'icon-allow-overlap': true
-    //             }
-    //         });
-    //
-    //         this.map.on('mouseenter', 'country_boundaries', function (e) {
-    //             let description = "<strong>Truckeroo</strong><p>Test</p>";
-    //             popup.setLngLat(countryLatLng).setHTML(description).addTo(this.map);
-    //         });
-    //         this.map.loadImage(
-    //             'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
-    //             function (error, image) {
-    //                 if (error) throw error;
-    //                 this.map.addImage('custom-marker', image);});
-    //
-    //     }
-    // }
+    createCountryInfo(countries) {
+        let entries = [];
+        for (let i = 0; i < countries.length; i++) {
+            entries.push(
+                <div>
+                    <div className="title">{countries[i].name}</div>
+                    <div className="content">
+                        <p className="transition hidden">{countries[i].info}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return function () {
+            return(
+                render(
+                    <div className="ui styled accordion">
+                        {entries}
+                    </div>
+                )
+        )}
+    }
 
     async dropdownOnChange(e, options) {
         let isoCode = this.findLanguageISO(e.target.textContent);
@@ -204,11 +199,13 @@ class Map extends React.Component {
                 this.panToCountry(zoom);
             } else {
                 this.dyeCountries(countries);
-                let latlng = countries[0].latlng;
-                this.setState({lng: latlng[1], lat: latlng[0]})
-                this.panToCountry(6);
+                if (countries[0] !== undefined && countries[0].latlng !== undefined) {
+                    let latlng = countries[0].latlng;    
+                    this.setState({lng: latlng[1], lat: latlng[0]})
+                    this.panToCountry(6);
+                }                              
             }
-            this.addInfoWindows(countries);
+            this.createCountryInfo(countries);
         } else {
             Dropdown.text = "Can't find country";
         }
@@ -231,24 +228,26 @@ class Map extends React.Component {
                             className='icon'
                             floating
                             labeled
+                            // selection
                             icon='world'
                             options={languageOptions}
                             search
                             placeholder="Select Language"
                             text={Dropdown.text}
-                            onChange={async (e, {value}) => {
+                            selectOnNavigation={true}
+
+                            onMouseDown={async (e, {value}) => {
                                 await this.dropdownOnChange(e, value);
                             }}
+                            
                         />
+                        <div id={'countryInfo'}></div>
                     </div>
 
                 </div>
                 <div ref={el => this.mapContainer = el}
                      className={'mapContainer'}
                 />
-
-
-
             </div>
         )
     }

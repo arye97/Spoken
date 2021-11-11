@@ -14,7 +14,7 @@ export const languageOptions = [
     {key:"ca",text:"Catalan",value:"Catalan"},
     {key:"ch",text:"Chamorro",value:"Chamorro"},
     {key:"ny",text:"Nyanja",value:"Nyanja"},
-    {key:"zh",text:"Chinese",value:"Chinese"},
+    {key:"zh",text:"Mandarin",value:"Mandarin"},
     {key:"hr",text:"Croatian",value:"Croatian"},
     {key:"cs",text:"Czech",value:"Czech"},
     {key:"da",text:"Danish",value:"Danish"},
@@ -32,7 +32,7 @@ export const languageOptions = [
     {key:"el",text:"Greek",value:"Greek"},
     {key:"gn",text:"Guaraní",value:"Guaraní"},
     {key:"ht",text:"Haitian",value:"Haitian"},
-    {key:"ha",text:"Hausa",value:"Hausa"},
+    // {key:"ha",text:"Hausa",value:"Hausa"},
     {key:"he",text:"Hebrew",value:"Hebrew"},
     {key:"hi",text:"Hindi",value:"Hindi"},
     {key:"hu",text:"Hungarian",value:"Hungarian"},
@@ -104,4 +104,4 @@ export const languageOptions = [
     {key:"ve",text:"Venda",value:"Venda"},
     {key:"vi",text:"Vietnamese",value:"Vietnamese"},
     {key:"xh",text:"Xhosa",value:"Xhosa"}
-]
+].sort((a, b) => (a.text < b.text) ? -1 : 1)
