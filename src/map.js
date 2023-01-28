@@ -49,9 +49,11 @@ class Map extends React.Component {
      * @returns {Promise<any>} the countries data - all countries return data
      */
     async getLanguageCountries(language) {
-        let url = 'https://restcountries.com/v2/lang/' + language;
-        let currentCountryInfo = await axios.get(url).catch((e) => {return null});
-        return (currentCountryInfo ? currentCountryInfo.data : null);
+        if (language !== 'Select Language' && language !== "") {
+            let url = 'https://restcountries.com/v3.1/lang/' + language;
+            let currentCountryInfo = await axios.get(url).catch((e) => {return null});
+            return (currentCountryInfo ? currentCountryInfo.data : null);
+        }
     }
 
     findLanguageISO(language) {
@@ -82,22 +84,18 @@ class Map extends React.Component {
         let x = 0.0;
         let y = 0.0;
         let z = 0.0;
-        for (let i = 0; i < countryData.length; i++) {
-            if (countryData[i].latlng !== undefined) {
-                let latitude = countryData[i].latlng[0] * Math.PI / 180;
-                let longitude = countryData[i].latlng[1] * Math.PI / 180;
-                let nx = x + Math.cos(latitude) * Math.cos(longitude);
-                let ny = y + Math.cos(latitude) * Math.sin(longitude);
-                let nz = z + Math.sin(latitude);
-                if (!isNaN(nx) && !isNaN(ny) && !isNaN(nz)) {
-                    x = nx;
-                    y = ny;
-                    z = nz;
-                } else {
-                    break;
-                }
-            }            
-        }
+        countryData.forEach(country => {
+            let latitude = country.latlng[0] * Math.PI / 180;
+            let longitude = country.latlng[1] * Math.PI / 180;
+            let nx = x + Math.cos(latitude) * Math.cos(longitude);
+            let ny = y + Math.cos(latitude) * Math.sin(longitude);
+            let nz = z + Math.sin(latitude);
+            if (!isNaN(nx) && !isNaN(ny) && !isNaN(nz)) {
+                x = nx;
+                y = ny;
+                z = nz;
+            }
+        });
 
         let total = countryData.length;
         x = x / total;
@@ -114,11 +112,11 @@ class Map extends React.Component {
     }
 
     dyeCountries(countryData, language) {
-        let countryStops = ["in",
-            "iso_3166_1_alpha_3"]
+        const countryStops = ["in",
+            "iso_3166_1_alpha_3"];
         for (let i = 0; i < countryData.length; i++) {
-            if (countryData[i].name !== 'Antarctica') {
-                countryStops.push(countryData[i].alpha3Code);
+            if (countryData[i].name.common !== 'Antarctica') {
+                countryStops.push(countryData[i].cca3);
             }
         }
         //this line is stupid but necessary
@@ -185,12 +183,12 @@ class Map extends React.Component {
     }
 
     async dropdownOnChange(e, options) {
-        let isoCode = this.findLanguageISO(e.target.textContent);
-        let countries = await this.getLanguageCountries(isoCode);
+        // let isoCode = this.findLanguageISO(e.target.textContent);
+        const countries = await this.getLanguageCountries(e.target.textContent).catch(error => { Dropdown.text = "Can't find country"; });
 
         if (countries != null) {
+            this.dyeCountries(countries);
             if (countries.length > 1) {
-                this.dyeCountries(countries);
                 this.findMiddleGround(countries);
                 let zoom = 4;
                 if (countries.length > 5) {
@@ -198,16 +196,13 @@ class Map extends React.Component {
                 }
                 this.panToCountry(zoom);
             } else {
-                this.dyeCountries(countries);
                 if (countries[0] !== undefined && countries[0].latlng !== undefined) {
-                    let latlng = countries[0].latlng;    
+                    let latlng = countries[0].latlng;
                     this.setState({lng: latlng[1], lat: latlng[0]})
                     this.panToCountry(6);
-                }                              
+                }
             }
             this.createCountryInfo(countries);
-        } else {
-            Dropdown.text = "Can't find country";
         }
 
     }
