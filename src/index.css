@@ -1,72 +1,79 @@
-.mapContainer {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  padding:0;
-  margin:0;
-  width: 100%;
-  height: 100%;
+html,
+body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden
+}
 
+* {
+    box-sizing: border-box;
+}
+
+/*@font-face {*/
+/*    font-family: "Augustus";*/
+/*    src: local("Augustus"),*/
+/*    url(../../assets/fonts/augustus.ttf) format("truetype");*/
+/*}*/
+
+@font-face {
+    font-family: "Vegan";
+
+    src: local("Vegan"),
+    url(./assets/fonts/VeganStylePersonalUse-5Y58.ttf) format("truetype");
 }
 
 @font-face {
-  font-family: "Vegan";
+    font-family: "Lemonmilk";
 
-  src: local("Vegan"),
-  url(./fonts/VeganStylePersonalUse-5Y58.ttf) format("truetype");
+    src: local("Lemonmilk"),
+    url(./assets/fonts/LEMONMILK-Regular.otf) format("opentype");
 }
 
-.searchBoxParent {
-  width:50%;
-  /*margin: 2.5% -10.5% 2.5% 2.5%;*/
-  justify-content: center;
-
-  display: inline-grid;
-  margin-left: 25%;
-  margin-top: 2.5%;
-  background-color: whitesmoke!important;
-  border-radius: 30px;
-  z-index: 9 !important;
+:root {
+    --code-color: darkred;
+    --code-bg-color: #aaaaaa;
+    --code-font-size: 14px;
+    --code-line-height: 1.4;
+    --scroll-bar-color: #b56576;
+    --scroll-bar-bg-color: #F0DBAF;
 }
 
-.searchBox {
-  /*margin: 2.5% -2.5%;*/
-/*  padding: 2.5%;*/
-/*  margin: 1px 1.5% 1.5%;*/
-  margin-left: 2.5%;
-  text-align: center;
-  width: 100% !important;
-  z-index: 9;
+pre {
+    color: var(--code-color);
+    font-size: var(--code-font-size);
+    line-height: var(--code-line-height);
+    background-color: var(--code-bg-color);
 }
 
-.titleSpoken {
-  /*margin: 2.5% 2.5% 2.5% -2.5%;*/
-  padding-top: 10%;
-  text-align: center;
-  -webkit-font-smoothing: antialiased;
-  font-family: Vegan;
-  color: #de4949;
-  /*color: lightcoral;*/
-  font-size: xxx-large;
-  z-index: 9;
+.code-block {
+    max-height: 100px;
+    overflow: auto;
+    padding: 8px 7px 5px 15px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 7px;
 }
 
-.subtitleSpoken {
-  /*margin: 2.5% 2.5% 2.5% -2.5%;*/
-  padding-top: -10%;
-  margin-top: -5%;
+::-webkit-scrollbar-corner { background: rgba(0,0,0,0.5); }
 
-  text-align: center;
-  -webkit-font-smoothing: antialiased;
-  font-family: Vegan;
-  color: #de4949;
-  /*color: lightcoral;*/
-  font-size: x-large;
-  z-index: 9;
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-bar-color) var(--scroll-bar-bg-color);
 }
 
-.introModalButton {
-  padding: 100%;
-  margin: 100%;
-  bottom: 100%;
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--scroll-bar-bg-color);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-bar-color);
+    border-radius: 20px;
+    border: 3px solid var(--scroll-bar-bg-color);
 }
