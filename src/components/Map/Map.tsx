@@ -37,10 +37,9 @@ const Map = (props: MapProps) => {
 
     const mapReset = () => {
         map.current?.easeTo({ center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE], essential: true, zoom: DEFAULT_ZOOM_LEVEL });
-        map.current?.setFilter('country-boundaries', DEFAULT_COUNTRY_STOPS);
+        // resetMapDataSources();
         setCanRotate(true);
         setTriggerRotation(true);
-        resetMapDataSources();
     }
 
     const resetMapDataSources = () => {
@@ -88,9 +87,9 @@ const Map = (props: MapProps) => {
             minZoom: DEFAULT_ZOOM_LEVEL
         });
 
-        map.current.on('load', () => {
-            setIsLoading(false);
+        map.current.once('load', () => {
             dyeCountries(languageContext.selectedLanguage.name);
+            setIsLoading(false);
         });
 
         map.current.on('drag', () => {
@@ -100,7 +99,6 @@ const Map = (props: MapProps) => {
         map.current.on('zoom', () => {
             setCanRotate(false);
         });
-
     }, []);
 
     useEffect(() => {
@@ -109,9 +107,8 @@ const Map = (props: MapProps) => {
 
     const rotateEarth = () => {
         if (!map.current) return;
-        setIsLoading(false);
         setTimeout(() => {
-            if (map.current?.getZoom() === DEFAULT_ZOOM_LEVEL && canRotate) {
+            if (map.current && canRotate) {
                 const newCenter = map.current?.getCenter();
                 map.current?.easeTo({zoom: DEFAULT_ZOOM_LEVEL, essential: true, center: [newCenter.lng - EARTH_ROTATION_RATE, newCenter.lat]});
             }
@@ -137,7 +134,10 @@ const Map = (props: MapProps) => {
         if (countryCount > 5) {
             zoom = 2.5;
         }
-        map.current?.flyTo({ center: [lng, lat], essential: true, zoom });
+        map.current?.flyTo({ center: [lng, lat], essential: true, zoom })
+            .on('moveend', () => {
+            setIsLoading(false);
+        });
     }
 
     const dyeCountries = (language: string) => {
@@ -152,7 +152,7 @@ const Map = (props: MapProps) => {
                 countryStops.push(country.cca3);
             });
             map.current?.setFilter('country-boundaries', countryStops);
-            setIsLoading(false);
+            // setIsLoading(false);
             const center = findCenterOfCountries(countries);
             flyToSelectedCountry(center.lat, center.lng, countries.length);
         });

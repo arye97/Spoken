@@ -64,8 +64,8 @@ pre {
 
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-    width: 16px;
-    height: 16px;
+    width: 4px;
+    height: 4px;
 }
 
 *::-webkit-scrollbar-track {
@@ -75,5 +75,5 @@ pre {
 *::-webkit-scrollbar-thumb {
     background-color: var(--scroll-bar-color);
     border-radius: 20px;
-    border: 3px solid var(--scroll-bar-bg-color);
+    border: 30px solid var(--scroll-bar-bg-color);
 }
