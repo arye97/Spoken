@@ -1,0 +1,29 @@
+.side-panel {
+  z-index: 1;
+  background-color: #F0DBAF;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 384px;
+  height: 100%;
+}
+
+.side-panel-border {
+  border-right: 4px solid;
+  color: #b56576;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 384px;
+  color: black;
+  text-align: center;
+}
+
+hr {
+  background-color: #b56576;
+  height: 4px;
+  width: 100%;
+}
