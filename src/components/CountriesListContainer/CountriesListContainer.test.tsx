@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SidePanel from './SidePanel';
+import CountriesListContainer from './CountriesListContainer';
 
 it('It should mount', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<SidePanel />, div);
+  ReactDOM.render(<CountriesListContainer />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

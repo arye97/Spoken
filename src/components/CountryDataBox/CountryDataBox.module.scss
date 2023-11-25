@@ -1,0 +1,83 @@
+.databox-container {
+  margin: 16px;
+  background-color: #BB8082;
+  object-fit: cover;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+}
+
+.databox-container:hover {
+  background-color: #6d597a;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+}
+
+.databox-container:active {
+  background-color: #6d597a;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, #F0DBAF 0px 0px 0px 3px;
+}
+
+.title {
+  max-width: 300px;
+  font-family: Lemonmilk;
+  font-size: small;
+  color: #F0DBAF;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.content {
+  width: 100%;
+  border-radius: 0 0 16px 16px;
+}
+
+hr {
+  margin: 0;
+  color: #6d597a;
+}
+
+.cover {
+  min-width: 300px;
+  min-height: 206px;
+}
+
+.spinner {
+  top: 32px;
+  position: relative;
+}
+
+.cover img {
+  min-width: 300px;
+  min-height: 150px;
+  max-height: 150px;
+  width: 300px;
+  object-fit: cover;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: block;
+  //border-radius: 0 0 16px 16px;
+}
+
+.credits-container {
+  width: 300px;
+  background-color: #b56576;
+  color: #F0DBAF;
+  font-family: Lemonmilk;
+  font-size: x-small;
+  text-align: center;
+  object-fit: cover;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: block;
+  border-radius: 0 0 16px 16px;
+}
+
+.credits-container:hover {
+  background-color: #6d597a;
+  color: #F0DBAF;
+}

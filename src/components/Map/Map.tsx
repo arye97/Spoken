@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Map.module.scss';
 import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -13,7 +13,7 @@ import {
     DEFAULT_ZOOM_LEVEL, DEFAULT_COUNTRY_STOPS
 } from "../../utils/constants";
 import MapButtons from "../MapButtons/MapButtons";
-import {IMapControlButton} from "../../utils/types";
+import {CountryResponse, IMapControlButton} from "../../utils/types";
 
 interface MapProps {}
 
@@ -88,7 +88,7 @@ const Map = (props: MapProps) => {
         });
 
         map.current.once('load', () => {
-            dyeCountries(languageContext.selectedLanguage.name);
+            dyeCountriesByLanguage(languageContext.selectedLanguage.name);
             setIsLoading(false);
         });
 
@@ -124,7 +124,7 @@ const Map = (props: MapProps) => {
         }
         setCanRotate(false);
         if (map.current?.loaded() && languageContext.selectedLanguage.name) {
-            dyeCountries(languageContext.selectedLanguage.name);
+            dyeCountriesByLanguage(languageContext.selectedLanguage.name);
         }
     }, [languageContext.selectedLanguage]);
 
@@ -140,7 +140,20 @@ const Map = (props: MapProps) => {
         });
     }
 
-    const dyeCountries = (language: string) => {
+    useEffect(() => {
+        if (languageContext.selectedSingleCountry.coords) {
+            dyeCountry(languageContext.selectedSingleCountry);
+        }
+    }, [languageContext.selectedSingleCountry])
+
+    const dyeCountry = (country: CountryResponse) => {
+        if (!map.current) return;
+        const countryStops = [...DEFAULT_COUNTRY_STOPS, country.cca3];
+        map.current?.setFilter('country-boundaries', countryStops);
+        flyToSelectedCountry(country.coords.lat, country.coords.lng, 1);
+    }
+
+    const dyeCountriesByLanguage = (language: string) => {
         if (!map.current || !language || language === DEFAULT_SELECT_VALUE) return;
 
         const countryStops = [...DEFAULT_COUNTRY_STOPS];
@@ -186,8 +199,9 @@ const Map = (props: MapProps) => {
             <div className={styles['mapControlButtons']}>
                 <MapButtons buttons={mapControlButtons} />
             </div>
-
-            { isLoading ? <LoadingSpinner /> : null }
+            <div className={styles['spinner']}>
+                { isLoading ? <LoadingSpinner /> : null }
+            </div>
             <div className={styles['mapContainer']} ref={mapContainer} />
         </div>
     );
