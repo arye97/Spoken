@@ -17,7 +17,12 @@ export interface CountryResponse {
         lat: number,
         lng: number
     },
-    area: number
+    area: number,
+    population: number,
+    continent: string,
+    flags: {
+        svg: string
+    }
 }
 
 export interface ILanguage {

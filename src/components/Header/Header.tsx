@@ -19,9 +19,6 @@ const Header = () => {
         <div className={styles['container']}>
             <div className={styles['header-position']}>
                 <div className={styles['menu-layout']}>
-                    <button
-                        onClick={ () => { appState.handleSidePanelState(!appState.sidePanelIsOpen); } }
-                        className={multiCSSHandler(['header-button', 'menu-button'], styles)} type="submit" name="submit"><i className="material-symbols-outlined">menu</i></button>
                     <h1 className={styles['header']}>Spoken</h1>
                 </div>
                 <div className={styles['search-box']}>

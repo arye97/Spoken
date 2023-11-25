@@ -1,0 +1,51 @@
+.countrydata-container {
+  z-index: 1;
+  background-color: transparent;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 89%;
+}
+
+.container {
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.close-button {
+  left: 320px;
+  margin: 8px;
+  z-index: 1;
+  position: absolute;
+}
+
+.open-button {
+  margin: 8px;
+  z-index: 1;
+  position: absolute;
+}
+
+::-webkit-scrollbar-corner { background: rgba(0,0,0,0.5); }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-bar-color);
+  border-radius: 20px;
+}
+

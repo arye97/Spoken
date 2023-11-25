@@ -1,17 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-import styles from './SelectDropdown.module.scss'
-import {fetchAllLanguages} from "../../services/map.service";
+import styles from './SelectDropdown.module.scss';
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import {DEFAULT_SELECT_VALUE} from "../../utils/constants";
 import {multiCSSHandler} from "../../utils/map.utils";
-import {useAppState, useOutsideAlerter} from "../../providers/AppState.provider";
+import {useOutsideAlerter} from "../../providers/AppState.provider";
+import {Simulate} from "react-dom/test-utils";
 
 interface SelectDropdownProps {}
 
 const SelectDropdown = (props: SelectDropdownProps) => {
 
     const languageContext = useLanguageSelection();
-    const appStateContext = useAppState();
 
     const optionsRef = useRef(null);
     const clickedOutside = useOutsideAlerter(optionsRef);
@@ -26,7 +25,15 @@ const SelectDropdown = (props: SelectDropdownProps) => {
         const form = document.getElementById("form");
         const formData = new FormData(form as any);
         const formJson = Object.fromEntries(formData.entries());
+
+        const selected = formJson.searchQuery as string;
         setSearchEntry(formJson.searchQuery as string);
+        if (dropdownOptions.find(lang => lang.toLowerCase() === selected.toLowerCase())) {
+            languageContext.updateSelectedLanguage({name: selected.toLowerCase(), cca3: ''});
+            setShowOptions(false);
+        } else {
+            setShowOptions(true);
+        }
     }
 
     useEffect(() => {
@@ -49,6 +56,7 @@ const SelectDropdown = (props: SelectDropdownProps) => {
         const searchBox = document.getElementById('search-box') as HTMLInputElement;
         if (searchBox) searchBox.value  = !showOptions ? "" : lang;
         languageContext.updateSelectedLanguage({name: lang, cca3: ''});
+        setShowOptions(false);
     }
 
     const handleDropdownView = (show: boolean) => {
@@ -56,12 +64,12 @@ const SelectDropdown = (props: SelectDropdownProps) => {
     }
 
     return (
-        <div className={styles['select-position']} ref={optionsRef}>
-            <form id="form" method="post" onChange={handleSubmit}>
-                <input type='text' id="search-box" onClick={(() => { handleDropdownView(!showOptions) })} placeholder={DEFAULT_SELECT_VALUE} autoComplete={'off'} name="searchQuery" className={multiCSSHandler(['select-dropdown', 'arrow'], styles)}/>
+        <div className={styles['select-position']} >
+            <form id="form" onSubmit={handleSubmit} >
+                <input id="search-box" onChange={handleSubmit} onClick={(() => { handleDropdownView(!showOptions) })} placeholder={DEFAULT_SELECT_VALUE} autoComplete={'off'} name="searchQuery" className={multiCSSHandler(['select-dropdown', 'arrow'], styles)}/>
                 {
-                    showOptions || searchEntry.length > 0 ?
-                        <div className={styles['options-container']} id={"selectedLanguage"}>
+                    showOptions || (showOptions && searchEntry.length > 0) ?
+                        <div className={styles['options-container']} id={"selectedLanguage"} ref={optionsRef}>
                             {
                                 dropdownOptions.map(option => {
                                     if (!searchEntry || option.toLowerCase().includes(searchEntry.toLowerCase())) {

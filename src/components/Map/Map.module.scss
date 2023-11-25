@@ -5,3 +5,12 @@
 .mapControlButtons {
 
 }
+
+.spinner {
+  top: 50%;
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  transform: scale(2);
+}

@@ -17,7 +17,10 @@ export const fetchCountriesByLanguage = async (language: string): Promise<Countr
                     lat: country.latlng[0],
                     lng: country.latlng[1]
                 },
-                area: country.area
+                area: country.area,
+                population: country.population,
+                continent: country.continent,
+                flags: country.flags
             }
         });
     } catch (e) {

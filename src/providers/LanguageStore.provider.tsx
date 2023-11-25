@@ -6,9 +6,11 @@ export interface LanguageStoreContextType {
     selectedLanguage: ILanguage,
     countries: CountryResponse[],
     allLanguages: ILanguage[],
+    selectedSingleCountry: CountryResponse,
     updateSelectedLanguage: (language: ILanguage) => void,
     updateCountries: (countryList: CountryResponse[]) => void,
-    getCountriesForLanguage: (language: string) => Promise<CountryResponse[]>
+    getCountriesForLanguage: (language: string) => Promise<CountryResponse[]>,
+    updateSingleSelectedCountry: (country: CountryResponse) => void
 }
 
 const LanguageStoreContext: Context<LanguageStoreContextType> = createContext<LanguageStoreContextType>(null!);
@@ -20,6 +22,7 @@ export interface LanguageSelectorProviderProps {
 const LanguageStoreProvider = ({children}: LanguageSelectorProviderProps) => {
 
     const [selectedLanguage, setSelectedLanguage] = useState<ILanguage>({} as ILanguage);
+    const [selectedSingleCountry, setSelectedSingleCountry] = useState<CountryResponse>({} as CountryResponse);
     const [countries, setCountries] = useState<CountryResponse[]>([]);
     const [allLanguages, setAllLanguages] = useState<ILanguage[]>([]);
 
@@ -35,6 +38,10 @@ const LanguageStoreProvider = ({children}: LanguageSelectorProviderProps) => {
         setSelectedLanguage(language);
     }
 
+    const updateSingleSelectedCountry = (country: CountryResponse) => {
+        setSelectedSingleCountry(country);
+    }
+
     const updateCountries = (countryList: CountryResponse[]) => {
         setCountries(countryList);
     }
@@ -42,11 +49,13 @@ const LanguageStoreProvider = ({children}: LanguageSelectorProviderProps) => {
     const getCountriesForLanguage = async (language: string): Promise<CountryResponse[]> => {
         // Save ourselves a network request
         if (languageToCountryMap.has(language)) {
+            setCountries(languageToCountryMap.get(language) ?? []);
             return languageToCountryMap.get(language) ?? []
         }
 
         const results = await fetchCountriesByLanguage(language);
         languageToCountryMap.set(language, results);
+        setCountries(results);
 
         return results;
     }
@@ -55,6 +64,8 @@ const LanguageStoreProvider = ({children}: LanguageSelectorProviderProps) => {
         selectedLanguage,
         countries,
         allLanguages,
+        selectedSingleCountry,
+        updateSingleSelectedCountry,
         updateSelectedLanguage,
         updateCountries,
         getCountriesForLanguage

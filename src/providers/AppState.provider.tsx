@@ -40,7 +40,6 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
             {children}
         </AppStateContext.Provider>
     )
-
 }
 
 /**
@@ -77,7 +76,7 @@ export const useOutsideAlerter = (ref: any) =>  {
             document.removeEventListener("mousedown", handleClickOutside);
             document.removeEventListener("keydown", handleEscapeKey);
         };
-    }, [hasBeenExited]);
+    }, [hasBeenExited, ref]);
 
     return hasBeenExited;
 }
