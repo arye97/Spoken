@@ -1,9 +1,6 @@
-
-
 .map-buttons {
-  position: absolute;
   display: flex;
   flex-direction: column;
-  right: 0;
   padding: 8px;
+  z-index: 1;
 }

@@ -34,3 +34,15 @@ export interface IMapControlButton {
     icon: string,
     callbackMethod: () => void
 }
+
+export enum SidePanelState {
+    CountryListData,
+    LanguageData,
+    AuthorData,
+    Closed
+}
+
+export enum MapButtonGroups {
+    MapControls,
+    SidePanelControls
+}

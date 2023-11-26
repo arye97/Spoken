@@ -35,29 +35,16 @@ const CountriesListContainer = (props: CountriesContainerProps) => {
     return (
             <div className={multiCSSHandler(['container'], styles)}>
                 {
-                    languageState.countries.length > 0 ?
-                    <div>
+                    <div className={multiCSSHandler(['countrydata-container'], styles)}>
                         {
-                            canShowCountryList ?
-                                <div>
-                                    <div className={multiCSSHandler(['countrydata-container'], styles)}>
-                                        {
-                                            languageState.countries
-                                                .sort((a, b) => (a.population > b.population) ? -1 : 1)
-                                                .map(country => {
-                                                    return (<CountryDataBox countryData={country}/>);
-                                                })
-                                        }
-                                    </div>
-                                    <div className={styles['close-button']} onClick={() => {handleCountriesList(false)}}>
-                                        <MapButton icon={'chevron_left'} />
-                                    </div>
-                                </div> :
-                                <div className={styles['open-button']} onClick={() => {handleCountriesList(true)}}>
-                                    <MapButton icon={'globe'}/>
-                                </div>
+                            languageState.countries
+                                .filter(x => !!x)
+                                .sort((a, b) => (a.population > b.population) ? -1 : 1)
+                                .map(country => {
+                                    return (<CountryDataBox countryData={country}/>);
+                                })
                         }
-                    </div> : null
+                    </div>
                 }
         </div>
     )

@@ -51,15 +51,15 @@ pre {
     max-height: 100px;
     overflow: auto;
     padding: 8px 7px 5px 15px;
-    margin: 0px 0px 0px 0px;
+    margin: 8px;
     border-radius: 7px;
 }
 
-::-webkit-scrollbar-corner { background: rgba(0,0,0,0.5); }
+/*::-webkit-scrollbar-corner { background: rgba(0,0,0,0.5); }*/
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--scroll-bar-color) var(--scroll-bar-bg-color);
+    scrollbar-color: transparent transparent;
 }
 
 /* Works on Chrome, Edge, and Safari */
@@ -69,11 +69,11 @@ pre {
 }
 
 *::-webkit-scrollbar-track {
-    background: var(--scroll-bar-bg-color);
+    background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-bar-color);
+    background-color: transparent;
     border-radius: 20px;
-    border: 30px solid var(--scroll-bar-bg-color);
+    border: 3px solid transparent;
 }
