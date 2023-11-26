@@ -10,10 +10,10 @@ import {
     DEFAULT_LATITUDE,
     DEFAULT_LONGITUDE,
     DEFAULT_SELECT_VALUE,
-    DEFAULT_ZOOM_LEVEL, DEFAULT_COUNTRY_STOPS
+    DEFAULT_MIN_ZOOM_LEVEL, DEFAULT_COUNTRY_STOPS, DEFAULT_MAX_ZOOM_LEVEL
 } from "../../utils/constants";
-import MapButtons from "../MapButtons/MapButtons";
-import {CountryResponse, IMapControlButton} from "../../utils/types";
+import {CountryResponse, IMapControlButton, MapButtonGroups} from "../../utils/types";
+import {useAppState} from "../../providers/AppState.provider";
 
 interface MapProps {}
 
@@ -23,21 +23,16 @@ const Map = (props: MapProps) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const appState = useAppState();
     const languageContext = useLanguageSelection();
     const mapContainer = React.useRef<any>(null);
     const map = React.useRef<mapboxgl.Map | null>(null);
 
-    const [lng, setLng] = React.useState(DEFAULT_LONGITUDE);
-    const [lat, setLat] = React.useState(DEFAULT_LATITUDE);
-    const [zoom, setZoom] = React.useState(DEFAULT_ZOOM_LEVEL);
-
     const [canRotate, setCanRotate] = React.useState(true);
     const [triggerRotation, setTriggerRotation] = React.useState(true);
-    const [mapControlButtons, setMapControlButtons] = React.useState<IMapControlButton[]>([]);
 
     const mapReset = () => {
-        map.current?.easeTo({ center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE], essential: true, zoom: DEFAULT_ZOOM_LEVEL });
-        // resetMapDataSources();
+        map.current?.flyTo({ center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE], essential: true, zoom: DEFAULT_MIN_ZOOM_LEVEL });
         setCanRotate(true);
         setTriggerRotation(true);
     }
@@ -75,16 +70,17 @@ const Map = (props: MapProps) => {
             }
         }
         ];
-        setMapControlButtons(buttons)
+
+        appState.addMapButtonGroup(MapButtonGroups.MapControls, buttons);
 
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [lng, lat],
-            zoom: zoom,
+            center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
+            zoom: DEFAULT_MIN_ZOOM_LEVEL,
             attributionControl: false,
-            maxZoom: 8,
-            minZoom: DEFAULT_ZOOM_LEVEL
+            maxZoom: DEFAULT_MAX_ZOOM_LEVEL,
+            minZoom: DEFAULT_MIN_ZOOM_LEVEL
         });
 
         map.current.once('load', () => {
@@ -93,6 +89,7 @@ const Map = (props: MapProps) => {
         });
 
         map.current.on('drag', () => {
+            console.log('here')
             setCanRotate(false);
         });
 
@@ -110,7 +107,7 @@ const Map = (props: MapProps) => {
         setTimeout(() => {
             if (map.current && canRotate) {
                 const newCenter = map.current?.getCenter();
-                map.current?.easeTo({zoom: DEFAULT_ZOOM_LEVEL, essential: true, center: [newCenter.lng - EARTH_ROTATION_RATE, newCenter.lat]});
+                map.current?.easeTo({zoom: DEFAULT_MIN_ZOOM_LEVEL, essential: true, center: [newCenter.lng - EARTH_ROTATION_RATE, newCenter.lat]});
             }
             setTriggerRotation(!triggerRotation);
         }, 50);
@@ -128,12 +125,8 @@ const Map = (props: MapProps) => {
         }
     }, [languageContext.selectedLanguage]);
 
-    const flyToSelectedCountry = (lat: number, lng: number, countryCount: number) => {
+    const flyToSelectedCountry = (lat: number, lng: number, zoom: number) => {
         if (!map.current) return;
-        let zoom = 4;
-        if (countryCount > 5) {
-            zoom = 2.5;
-        }
         map.current?.flyTo({ center: [lng, lat], essential: true, zoom })
             .on('moveend', () => {
             setIsLoading(false);
@@ -150,7 +143,11 @@ const Map = (props: MapProps) => {
         if (!map.current) return;
         const countryStops = [...DEFAULT_COUNTRY_STOPS, country.cca3];
         map.current?.setFilter('country-boundaries', countryStops);
-        flyToSelectedCountry(country.coords.lat, country.coords.lng, 1);
+        flyToSelectedCountry(country.coords.lat, country.coords.lng, calculateZoom([country]));
+    }
+
+    const calculateZoom = (country: CountryResponse[]): number => {
+        return 4;
     }
 
     const dyeCountriesByLanguage = (language: string) => {
@@ -167,7 +164,7 @@ const Map = (props: MapProps) => {
             map.current?.setFilter('country-boundaries', countryStops);
             // setIsLoading(false);
             const center = findCenterOfCountries(countries);
-            flyToSelectedCountry(center.lat, center.lng, countries.length);
+            flyToSelectedCountry(center.lat, center.lng, calculateZoom(countries));
         });
 
         resetMapDataSources();
@@ -196,9 +193,6 @@ const Map = (props: MapProps) => {
 
     return (
         <div>
-            <div className={styles['mapControlButtons']}>
-                <MapButtons buttons={mapControlButtons} />
-            </div>
             <div className={styles['spinner']}>
                 { isLoading ? <LoadingSpinner /> : null }
             </div>

@@ -1,10 +1,13 @@
 import React, {Context, createContext, useContext, useEffect, useState} from "react";
+import {IMapControlButton, MapButtonGroups} from "../utils/types";
 
 export interface AppStateContextType {
     handleSidePanelState: (open: boolean) => void
     handleDropdownState: (open: boolean) => void,
+    addMapButtonGroup: (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => void,
     sidePanelIsOpen: boolean,
-    languageDropdownIsOpen: boolean
+    languageDropdownIsOpen: boolean,
+    buttonGroupsMap: Map<MapButtonGroups, IMapControlButton[]>
 }
 
 export interface AppStateProviderProps {
@@ -18,6 +21,8 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
     const [sidePanelIsOpen, setSidePanelIsOpen] = useState<boolean>(false);
     const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState<boolean>(false);
 
+    const buttonGroupsMap = new Map<MapButtonGroups, IMapControlButton[]>();
+
     const handleDropdownState = (open: boolean) => {
         setLanguageDropdownIsOpen(open);
     }
@@ -26,9 +31,18 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
         setSidePanelIsOpen(open);
     }
 
+    const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
+        console.log(buttonGroup)
+        if (!buttonGroupsMap.has(key) || !buttonGroupsMap.get(key)) {
+            buttonGroupsMap.set(key, buttonGroup);
+        }
+    }
+
     const ctx = {
         handleSidePanelState,
         handleDropdownState,
+        addMapButtonGroup,
+        buttonGroupsMap,
         sidePanelIsOpen,
         languageDropdownIsOpen
     }

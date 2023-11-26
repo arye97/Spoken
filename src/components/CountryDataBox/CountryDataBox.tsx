@@ -16,6 +16,8 @@ interface ICredits {
     url: string
 }
 
+const accessToken = process.env.REACT_APP_UNSPLASH_KEY;
+
 const CountryDataBox = (props: CountryDataBoxProps) => {
 
     const languageStore = useLanguageSelection();
@@ -37,7 +39,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }, [languageStore.selectedLanguage]);
 
     const getPhotoUrl = async () => {
-        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.common}&client_id=${process.env.REACT_APP_UNSPLASH_KEY}`;
+        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.common}&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
         });
@@ -77,7 +79,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
                         }
 
                     </div>:
-                    <div className={styles['spinner']}>`
+                    <div className={styles['spinner']}>
                         <LoadingSpinner  />
                     </div>
             }

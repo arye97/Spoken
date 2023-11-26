@@ -4,6 +4,8 @@ import LanguageStoreProvider from "../../providers/LanguageStore.provider";
 import Header from "../Header/Header";
 import AppStateProvider from "../../providers/AppState.provider";
 import CountriesListContainer from "../CountriesListContainer/CountriesListContainer";
+import SidePanel from "../SidePanel/SidePanel";
+import MapButtons from "../MapButtons/MapButtons";
 
 const App = () => {
 
@@ -12,7 +14,7 @@ const App = () => {
             <AppStateProvider>
                 <LanguageStoreProvider>
                     <Header />
-                    <CountriesListContainer />
+                    <SidePanel />
                     <Map />
                 </LanguageStoreProvider>
             </AppStateProvider>
