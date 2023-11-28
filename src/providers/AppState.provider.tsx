@@ -21,6 +21,8 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
     const [sidePanelIsOpen, setSidePanelIsOpen] = useState<boolean>(false);
     const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState<boolean>(false);
 
+    const [triggerRerender, setTriggerRerender] = useState<boolean>(false);
+
     const buttonGroupsMap = new Map<MapButtonGroups, IMapControlButton[]>();
 
     const handleDropdownState = (open: boolean) => {
@@ -32,10 +34,8 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
     }
 
     const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
-        console.log(buttonGroup)
-        if (!buttonGroupsMap.has(key) || !buttonGroupsMap.get(key)) {
-            buttonGroupsMap.set(key, buttonGroup);
-        }
+        // TODO: NOT RE RENDERING PROPERLY
+        buttonGroupsMap.set(key, buttonGroup);
     }
 
     const ctx = {

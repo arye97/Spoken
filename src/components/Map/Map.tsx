@@ -45,6 +45,43 @@ const Map = (props: MapProps) => {
         }
     }
 
+    const updateSideButtons = () => {
+        const buttons: IMapControlButton[] = [
+            {
+                icon: 'add',
+                callbackMethod: () => {
+                    map.current?.zoomIn();
+                }
+            },
+            {
+                icon: 'remove',
+                callbackMethod: () => {
+                    map.current?.zoomOut();
+                }
+            },
+            {
+                icon: 'center_focus_strong',
+                callbackMethod: () => {
+                    mapReset();
+                }
+            }
+        ];
+
+        if (languageContext.selectedLanguage.name && languageContext.selectedSingleCountry.name) {
+            buttons.push({
+                icon: 'globe',
+                callbackMethod: () => {
+                    dyeCountriesByLanguage(languageContext.selectedLanguage.name);
+                }
+            });
+        }
+        appState.addMapButtonGroup(MapButtonGroups.MapControls, buttons);
+    }
+
+    useEffect(() => {
+        updateSideButtons();
+    }, [languageContext.selectedLanguage, languageContext.selectedSingleCountry]);
+
     /**
      * This hook runs at the initialisation of the component
      * Sets up the things the map needs to run including the map action buttons
@@ -53,25 +90,8 @@ const Map = (props: MapProps) => {
         if (map.current) return; // initialize map only once
 
         setIsLoading(true);
-        let buttons: IMapControlButton[] = [{
-            icon: 'add',
-            callbackMethod: () => {
-                map.current?.zoomIn();
-            }
-        }, {
-            icon: 'remove',
-            callbackMethod: () => {
-                map.current?.zoomOut();
-            }
-        }, {
-            icon: 'center_focus_strong',
-            callbackMethod: () => {
-                mapReset();
-            }
-        }
-        ];
 
-        appState.addMapButtonGroup(MapButtonGroups.MapControls, buttons);
+        updateSideButtons();
 
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
@@ -89,7 +109,6 @@ const Map = (props: MapProps) => {
         });
 
         map.current.on('drag', () => {
-            console.log('here')
             setCanRotate(false);
         });
 
@@ -162,7 +181,6 @@ const Map = (props: MapProps) => {
                 countryStops.push(country.cca3);
             });
             map.current?.setFilter('country-boundaries', countryStops);
-            // setIsLoading(false);
             const center = findCenterOfCountries(countries);
             flyToSelectedCountry(center.lat, center.lng, calculateZoom(countries));
         });

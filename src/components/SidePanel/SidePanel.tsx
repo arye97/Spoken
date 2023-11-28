@@ -27,7 +27,7 @@ const SidePanel = (props: SidePanelProps) => {
         if (languageState.selectedLanguage.name && sidePanelViewState === SidePanelState.Closed) {
             const buttons: IMapControlButton[] = [
                 {
-                    icon: 'globe',
+                    icon: 'flag',
                     callbackMethod: () => {
                         setSidePanelViewState(SidePanelState.CountryListData);
                     }

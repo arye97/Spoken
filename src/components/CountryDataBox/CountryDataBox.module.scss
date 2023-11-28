@@ -27,6 +27,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .content {
@@ -45,7 +48,13 @@ hr {
 }
 
 .spinner {
-  top: 32px;
+  top: 42px;
+  position: relative;
+}
+
+.title-pop-count {
+  transform: scale(0.7);
+  top: 4px;
   position: relative;
 }
 

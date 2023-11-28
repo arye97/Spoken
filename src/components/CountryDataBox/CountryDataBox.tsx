@@ -62,7 +62,11 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     return (
         <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container', 'cover'], styles)}>
             <h2 className={styles['title']}>
-                { props.countryData.name.common }
+                { props.countryData.name.common } |
+                <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
+                    record_voice_over
+                </span>
+                { (Math.abs(Number(props.countryData.population)) / 1.0e+6).toFixed(2) + "M" }
             </h2>
             <hr/>
             {
