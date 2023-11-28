@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import styles from './CountryDataBox.module.scss';
-import {formatPopCount,  multiCSSHandler} from "../../utils/map.utils";
+import {goToUrl, multiCSSHandler} from "../../utils/map.utils";
 import {CountryResponse} from "../../utils/types";
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+
+import testImage from './germany-test-photo.jpg';
 
 interface CountryDataBoxProps {
     countryData: CountryResponse
@@ -29,77 +31,62 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     useEffect(() => {
-        getPhotoUrl().then();
+        // getPhotoUrl().then();
     }, []);
 
     useEffect(() => {
         setPhotoUrl('');
     }, [languageStore.selectedLanguage]);
 
-    const downloadPhoto = (download_location: string) => {
-        const url = `${download_location}&client_id=${accessToken}`;
-        fetch(url, {
-            method: 'GET'
-        }).then();
-    }
-
     const getPhotoUrl = async () => {
-
-        const name = props.countryData.name.common.replaceAll(' ', ',');
-        const url = `https://api.unsplash.com/photos/random?query=${name}&client_id=${accessToken}`;
+        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.common}&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
         });
 
-        response.json().then(
+        const dataUrl = response.json().then(
             data => {
                 if (data) {
                     setPhotoUrl(data.urls.small);
                     setImageCredits({
                        name: data.user.name,
-                       url: data.user.links.html + '?utm_source=Spoken&utm_medium=referral'
+                       url: data.user.links.html
                     });
-                    downloadPhoto(data.links.download_location);
                 }
             }
         ).catch(() => {
-            console.error('Could not fetch image');
+            console.log('oops')
         });
     }
 
     return (
-        <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container'], styles)}>
-                <h2 className={styles['title']}>
-                    <img src={props.countryData.flags.svg} alt={'flag'} className={styles['flag']}/>
-                    <div className={styles['title-container']}>
-                        { props.countryData.name.common } |
-                        <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
-                            record_voice_over
-                        </span>
-                        { formatPopCount(props.countryData.population) }
-                    </div>
-
-                </h2>
+        <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container', 'cover'], styles)}>
+            <h2 className={styles['title']}>
+                { props.countryData.name.common } |
+                <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
+                    record_voice_over
+                </span>
+                { (Math.abs(Number(props.countryData.population)) / 1.0e+6).toFixed(2) + "M" }
+            </h2>
             <hr/>
-            <div className={styles['loader'] + ' ' + styles['cover']}>
-                {
-                    photoUrl ?
-                        <div>
-                            <img className={styles['cover']} src={photoUrl} alt={''}/>
-                            {
-                                imageCredits ?
-                                    <a className={styles['credits-container']} href={imageCredits.url} target={'_blank'}>
-                                        Photo by {imageCredits?.name} on Unsplash
-                                    </a>
-                                    : null
-                            }
-                        </div>:
-                        <div className={styles['spinner']}>
-                            <LoadingSpinner  />
-                        </div>
-                }
-            </div>
+            {
+                photoUrl ?
+                    <div>
+                        <img className={styles['cover']} src={photoUrl} alt={'not loaded'}/>
+                        {
+                            imageCredits ?
+                                <div className={styles['credits-container']} onClick={() => goToUrl(imageCredits.url)}>
+                                    {
+                                        "Photo by " + imageCredits?.name
+                                    }
+                                </div> : null
+                        }
 
+                    </div>:
+                    <div className={styles['spinner']}>
+                        <LoadingSpinner  />
+                    </div>
+            }
 
         </div>
     );

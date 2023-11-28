@@ -2,11 +2,12 @@ import React, {Context, createContext, useContext, useEffect, useState} from "re
 import {IMapControlButton, MapButtonGroups} from "../utils/types";
 
 export interface AppStateContextType {
+    handleSidePanelState: (open: boolean) => void
+    handleDropdownState: (open: boolean) => void,
     addMapButtonGroup: (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => void,
-    buttonGroupsMap: Record<MapButtonGroups, IMapControlButton[]>,
-    openSearchBox: () => void,
-    closeSearchBox: () => void,
-    searchBoxIsOpen: boolean
+    sidePanelIsOpen: boolean,
+    languageDropdownIsOpen: boolean,
+    buttonGroupsMap: Map<MapButtonGroups, IMapControlButton[]>
 }
 
 export interface AppStateProviderProps {
@@ -17,30 +18,33 @@ const AppStateContext: Context<AppStateContextType> = createContext<AppStateCont
 
 const AppStateProvider = ({ children }: AppStateProviderProps) => {
 
-    const [buttonGroupsMap, setButtonGroupsMap] = useState<Record<MapButtonGroups, IMapControlButton[]>>({} as Record<MapButtonGroups, IMapControlButton[]>);
+    const [sidePanelIsOpen, setSidePanelIsOpen] = useState<boolean>(false);
+    const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState<boolean>(false);
 
-    const [searchBoxIsOpen, setSearchBoxIsOpen] = useState<boolean>(false);
+    const [triggerRerender, setTriggerRerender] = useState<boolean>(false);
 
-    const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
-        if (buttonGroup.length < 1 || ( buttonGroupsMap[key] && buttonGroupsMap[key].length === buttonGroup.length )) return;
-        const newGroup: Record<MapButtonGroups, IMapControlButton[]> = {
-            ...buttonGroupsMap,
-            [key]: buttonGroup
-        };
-        setButtonGroupsMap(newGroup);
+    const buttonGroupsMap = new Map<MapButtonGroups, IMapControlButton[]>();
+
+    const handleDropdownState = (open: boolean) => {
+        setLanguageDropdownIsOpen(open);
     }
 
+    const handleSidePanelState = (open: boolean) => {
+        setSidePanelIsOpen(open);
+    }
 
-    const openSearchBox = () => { setSearchBoxIsOpen(true); }
-    const closeSearchBox = () => { setSearchBoxIsOpen(false); }
-
+    const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
+        // TODO: NOT RE RENDERING PROPERLY
+        buttonGroupsMap.set(key, buttonGroup);
+    }
 
     const ctx = {
+        handleSidePanelState,
+        handleDropdownState,
         addMapButtonGroup,
         buttonGroupsMap,
-        openSearchBox,
-        closeSearchBox,
-        searchBoxIsOpen
+        sidePanelIsOpen,
+        languageDropdownIsOpen
     }
 
     return (

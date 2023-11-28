@@ -18,15 +18,16 @@ const SidePanel = (props: SidePanelProps) => {
         MapButtonGroups.MapControls,
         MapButtonGroups.SidePanelControls
     ];
-  
+
+    const [buttonGroupsState, setButtonGroupsState] = useState<Map<MapButtonGroups, IMapControlButton[]>>();
+
     const [sidePanelViewState, setSidePanelViewState] = useState<SidePanelState>(SidePanelState.Closed);
 
     useEffect(() => {
-        if (languageState.selectedLanguage.name) {
+        if (languageState.selectedLanguage.name && sidePanelViewState === SidePanelState.Closed) {
             const buttons: IMapControlButton[] = [
                 {
                     icon: 'flag',
-
                     callbackMethod: () => {
                         setSidePanelViewState(SidePanelState.CountryListData);
                     }
@@ -38,37 +39,39 @@ const SidePanel = (props: SidePanelProps) => {
                     }
                 },
                 {
-                    icon: 'frame_reload',
+                    icon: 'person',
                     callbackMethod: () => {
-                        setSidePanelViewState(SidePanelState.Closed);
+                        console.log('person click');
                     }
                 }
             ];
             setSidePanelViewState(SidePanelState.CountryListData);
             appState.addMapButtonGroup(MapButtonGroups.SidePanelControls, buttons);
         }
-    }, [languageState.selectedLanguage, appState]);
+    }, [languageState.selectedLanguage]);
+
+    useEffect(() => {
+        setButtonGroupsState(appState.buttonGroupsMap);
+    }, [appState.buttonGroupsMap])
 
     return (
+
         <div className={styles['side-panel']}>
             <div className={styles['buttons']}>
                 {
                     buttonGroupTypes.map(key => {
-                        const group = appState.buttonGroupsMap[key];
-                        if (!group) return;
+                        const group = buttonGroupsState?.get(key) ?? [];
+                        if (group.length === 0) return;
                         return (
                             <div key={key}>
-                                {
-                                    !appState.searchBoxIsOpen ? <MapButtons buttons={group}/> : null
-                                }
-
+                                <MapButtons buttons={group}/>
                             </div>
                         )
                     })
                 }
             </div>
             {
-                sidePanelViewState !== SidePanelState.Closed && !appState.searchBoxIsOpen &&
+                sidePanelViewState !== SidePanelState.Closed &&
                 <div>
                     {
                         sidePanelViewState === SidePanelState.CountryListData ?

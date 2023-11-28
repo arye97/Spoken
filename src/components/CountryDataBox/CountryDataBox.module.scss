@@ -4,17 +4,13 @@
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;
-  text-overflow: ellipsis;
-  z-index: 1;
-  border: thick outset #6d597a;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
 }
 
 .databox-container:hover {
-  transform: scale(1.05);
-  border: thick solid #b56576;
   background-color: #6d597a;
   cursor: pointer;
-  box-shadow: #6d597a 0px 1px 4px, #F0DBAF 0px 0px 0px 3px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
 }
 
 .databox-container:active {
@@ -24,27 +20,16 @@
 }
 
 .title {
-  text-overflow: ellipsis;
-  max-width: 350px;
+  max-width: 300px;
   font-family: Lemonmilk;
-  font-size: medium;
+  font-size: small;
   color: #F0DBAF;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
-  margin-top: 16px;
-  .flag {
-    position: relative;
-    top: -6px;
-    height: 64px;
-  }
-}
-
-
-.title-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap ;
-
+  justify-content: space-between;
 }
 
 .content {
@@ -58,12 +43,8 @@ hr {
 }
 
 .cover {
-  max-width: calc(100vw - 128px);
-}
-
-.loader {
-  min-height: 150px;
-  min-width: 200px;
+  min-width: 300px;
+  min-height: 206px;
 }
 
 .spinner {
@@ -73,22 +54,25 @@ hr {
 
 .title-pop-count {
   transform: scale(0.7);
+  top: 4px;
   position: relative;
 }
 
 .cover img {
+  min-width: 300px;
   min-height: 150px;
   max-height: 150px;
-  width: 350px;
+  width: 300px;
   object-fit: cover;
   overflow: hidden;
   margin: 0;
   padding: 0;
   display: block;
-  max-width: 100%;
+  //border-radius: 0 0 16px 16px;
 }
 
 .credits-container {
+  width: 300px;
   background-color: #b56576;
   color: #F0DBAF;
   font-family: Lemonmilk;

@@ -1,21 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import styles from './Map.module.scss';
-import mapboxgl, {LngLatBounds, LngLatBoundsLike} from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
+import {findCenterOfCountries} from "../../utils/map.utils";
 import {
-    DEFAULT_COUNTRY_STOPS,
+    EARTH_ROTATION_RATE,
     DEFAULT_LATITUDE,
     DEFAULT_LONGITUDE,
-    DEFAULT_MAX_ZOOM_LEVEL,
-    DEFAULT_MIN_ZOOM_LEVEL,
     DEFAULT_SELECT_VALUE,
-    EARTH_ROTATION_RATE
+    DEFAULT_MIN_ZOOM_LEVEL, DEFAULT_COUNTRY_STOPS, DEFAULT_MAX_ZOOM_LEVEL
 } from "../../utils/constants";
 import {CountryResponse, IMapControlButton, MapButtonGroups} from "../../utils/types";
 import {useAppState} from "../../providers/AppState.provider";
-import {calculateZoom, getBoundsOfCountries} from "../../utils/map.utils";
 
 interface MapProps {}
 
@@ -69,8 +67,20 @@ const Map = (props: MapProps) => {
             }
         ];
 
+        if (languageContext.selectedLanguage.name && languageContext.selectedSingleCountry.name) {
+            buttons.push({
+                icon: 'globe',
+                callbackMethod: () => {
+                    dyeCountriesByLanguage(languageContext.selectedLanguage.name);
+                }
+            });
+        }
         appState.addMapButtonGroup(MapButtonGroups.MapControls, buttons);
     }
+
+    useEffect(() => {
+        updateSideButtons();
+    }, [languageContext.selectedLanguage, languageContext.selectedSingleCountry]);
 
     /**
      * This hook runs at the initialisation of the component
@@ -80,8 +90,9 @@ const Map = (props: MapProps) => {
         if (map.current) return; // initialize map only once
 
         setIsLoading(true);
+
         updateSideButtons();
-      
+
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -123,6 +134,10 @@ const Map = (props: MapProps) => {
 
     useEffect(() => {
         if (!languageContext.selectedLanguage.name) return;
+        if (languageContext.selectedLanguage.name === DEFAULT_SELECT_VALUE) {
+            mapReset();
+            return;
+        }
         setCanRotate(false);
         if (map.current?.loaded() && languageContext.selectedLanguage.name) {
             dyeCountriesByLanguage(languageContext.selectedLanguage.name);
@@ -147,27 +162,27 @@ const Map = (props: MapProps) => {
         if (!map.current) return;
         const countryStops = [...DEFAULT_COUNTRY_STOPS, country.cca3];
         map.current?.setFilter('country-boundaries', countryStops);
-        flyToSelectedCountry(country.coords.lat, country.coords.lng, calculateZoom(country));
+        flyToSelectedCountry(country.coords.lat, country.coords.lng, calculateZoom([country]));
+    }
+
+    const calculateZoom = (country: CountryResponse[]): number => {
+        return 4;
     }
 
     const dyeCountriesByLanguage = (language: string) => {
         if (!map.current || !language || language === DEFAULT_SELECT_VALUE) return;
+
         const countryStops = [...DEFAULT_COUNTRY_STOPS];
+
+        setIsLoading(true);
 
         languageContext.getCountriesForLanguage(language).then((countries) => {
             countries.forEach(country => {
                 countryStops.push(country.cca3);
             });
-
-            if (countries.length === 0) return;
-
-            if (countries.length > 1) {
-                map.current?.setFilter('country-boundaries', countryStops);
-                const bounds = getBoundsOfCountries(countries);
-                map.current?.fitBounds(bounds as LngLatBoundsLike);
-            } else {
-                dyeCountry(countries[0]);
-            }
+            map.current?.setFilter('country-boundaries', countryStops);
+            const center = findCenterOfCountries(countries);
+            flyToSelectedCountry(center.lat, center.lng, calculateZoom(countries));
         });
 
         resetMapDataSources();
@@ -184,7 +199,7 @@ const Map = (props: MapProps) => {
                     type: 'fill',
                     paint: {
                         'fill-color': '#d2361e',
-                        'fill-opacity': 0.8,
+                        'fill-opacity': 0.5,
                     }
                 },
                 'country-label'
