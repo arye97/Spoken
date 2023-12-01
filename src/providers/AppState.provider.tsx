@@ -2,12 +2,8 @@ import React, {Context, createContext, useContext, useEffect, useState} from "re
 import {IMapControlButton, MapButtonGroups} from "../utils/types";
 
 export interface AppStateContextType {
-    handleSidePanelState: (open: boolean) => void
-    handleDropdownState: (open: boolean) => void,
     addMapButtonGroup: (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => void,
-    sidePanelIsOpen: boolean,
-    languageDropdownIsOpen: boolean,
-    buttonGroupsMap: Map<MapButtonGroups, IMapControlButton[]>
+    buttonGroupsMap: Record<MapButtonGroups, IMapControlButton[]>
 }
 
 export interface AppStateProviderProps {
@@ -18,33 +14,20 @@ const AppStateContext: Context<AppStateContextType> = createContext<AppStateCont
 
 const AppStateProvider = ({ children }: AppStateProviderProps) => {
 
-    const [sidePanelIsOpen, setSidePanelIsOpen] = useState<boolean>(false);
-    const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState<boolean>(false);
-
-    const [triggerRerender, setTriggerRerender] = useState<boolean>(false);
-
-    const buttonGroupsMap = new Map<MapButtonGroups, IMapControlButton[]>();
-
-    const handleDropdownState = (open: boolean) => {
-        setLanguageDropdownIsOpen(open);
-    }
-
-    const handleSidePanelState = (open: boolean) => {
-        setSidePanelIsOpen(open);
-    }
+    const [buttonGroupsMap, setButtonGroupsMap] = useState<Record<MapButtonGroups, IMapControlButton[]>>({} as Record<MapButtonGroups, IMapControlButton[]>);
 
     const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
-        // TODO: NOT RE RENDERING PROPERLY
-        buttonGroupsMap.set(key, buttonGroup);
+        if (buttonGroup.length < 1 || ( buttonGroupsMap[key] && buttonGroupsMap[key].length === buttonGroup.length )) return;
+        const newGroup: Record<MapButtonGroups, IMapControlButton[]> = {
+            ...buttonGroupsMap,
+            [key]: buttonGroup
+        };
+        setButtonGroupsMap(newGroup);
     }
 
     const ctx = {
-        handleSidePanelState,
-        handleDropdownState,
         addMapButtonGroup,
-        buttonGroupsMap,
-        sidePanelIsOpen,
-        languageDropdownIsOpen
+        buttonGroupsMap
     }
 
     return (

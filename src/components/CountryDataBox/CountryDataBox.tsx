@@ -59,6 +59,17 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
         });
     }
 
+    const formatPopCount = (pop: number) => {
+        if (pop > 1.0e+6 && pop < 1.0e+8) {
+            return (Math.abs(Number(props.countryData.population)) / 1.0e+6).toFixed(2) + "M";
+        } else if (pop < 1.0e+6) {
+            return (Math.abs(Number(props.countryData.population)) / 1.0e+3).toFixed(2) + "K";
+        } else if (pop > 1.0e+8) {
+            return (Math.abs(Number(props.countryData.population)) / 1.0e+9).toFixed(2) + "B";
+        }
+
+    }
+
     return (
         <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container', 'cover'], styles)}>
             <h2 className={styles['title']}>
@@ -66,7 +77,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
                 <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
                     record_voice_over
                 </span>
-                { (Math.abs(Number(props.countryData.population)) / 1.0e+6).toFixed(2) + "M" }
+                { formatPopCount(props.countryData.population) }
             </h2>
             <hr/>
             {

@@ -27,9 +27,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  margin-top: 4px;
 }
 
 .content {
@@ -54,7 +52,7 @@ hr {
 
 .title-pop-count {
   transform: scale(0.7);
-  top: 4px;
+  top: 6px;
   position: relative;
 }
 
