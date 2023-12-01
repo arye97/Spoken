@@ -41,7 +41,7 @@ const CountriesListContainer = (props: CountriesContainerProps) => {
                                 .filter(x => !!x)
                                 .sort((a, b) => (a.population > b.population) ? -1 : 1)
                                 .map(country => {
-                                    return (<CountryDataBox countryData={country}/>);
+                                    return (<CountryDataBox key={country.name.common} countryData={country}/>);
                                 })
                         }
                     </div>

@@ -1,4 +1,5 @@
 import {CountryResponse} from "./types";
+import mapboxgl, {LngLatBounds} from "mapbox-gl";
 
 
 /**
@@ -48,4 +49,20 @@ export const multiCSSHandler = (classes: string[], styles: any) => {
 
 export const goToUrl = (url: string) => {
     window.open(url, "_blank");
+}
+
+export const getBoundsOfCountries = (countries: CountryResponse[]): LngLatBounds => {
+    const coords = countries.map(country => new mapboxgl.LngLat(country.coords.lng, country.coords.lat));
+
+    const southWestLat = Math.max(Math.min(...coords.map(coord => coord.lat)) - 10, -90);
+    const southWestLng = Math.max(Math.min(...coords.map(coord => coord.lng)) - 10, -90);
+
+    const northEastLat = Math.min(Math.max(...coords.map(coord => coord.lat)) + 10, 90);
+    const northEastLng = Math.min(Math.max(...coords.map(coord => coord.lng)) + 10, 90);
+
+    const southWestBounds = new mapboxgl.LngLat(southWestLng, southWestLat);
+    const northEastBounds = new mapboxgl.LngLat(northEastLng, northEastLat);
+
+
+    return new mapboxgl.LngLatBounds(southWestBounds, northEastBounds);
 }

@@ -19,12 +19,10 @@ const SidePanel = (props: SidePanelProps) => {
         MapButtonGroups.SidePanelControls
     ];
 
-    const [buttonGroupsState, setButtonGroupsState] = useState<Map<MapButtonGroups, IMapControlButton[]>>();
-
     const [sidePanelViewState, setSidePanelViewState] = useState<SidePanelState>(SidePanelState.Closed);
 
     useEffect(() => {
-        if (languageState.selectedLanguage.name && sidePanelViewState === SidePanelState.Closed) {
+        if (languageState.selectedLanguage.name) {
             const buttons: IMapControlButton[] = [
                 {
                     icon: 'flag',
@@ -38,10 +36,16 @@ const SidePanel = (props: SidePanelProps) => {
                         setSidePanelViewState(SidePanelState.LanguageData);
                     }
                 },
+                // {
+                //     icon: 'person',
+                //     callbackMethod: () => {
+                //         console.log('person click');
+                //     }
+                // },
                 {
-                    icon: 'person',
+                    icon: 'frame_reload',
                     callbackMethod: () => {
-                        console.log('person click');
+                        setSidePanelViewState(SidePanelState.Closed);
                     }
                 }
             ];
@@ -50,18 +54,13 @@ const SidePanel = (props: SidePanelProps) => {
         }
     }, [languageState.selectedLanguage]);
 
-    useEffect(() => {
-        setButtonGroupsState(appState.buttonGroupsMap);
-    }, [appState.buttonGroupsMap])
-
     return (
-
         <div className={styles['side-panel']}>
             <div className={styles['buttons']}>
                 {
                     buttonGroupTypes.map(key => {
-                        const group = buttonGroupsState?.get(key) ?? [];
-                        if (group.length === 0) return;
+                        const group = appState.buttonGroupsMap[key];
+                        if (!group) return;
                         return (
                             <div key={key}>
                                 <MapButtons buttons={group}/>
