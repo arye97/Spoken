@@ -39,7 +39,14 @@ const LanguageStoreProvider = ({children}: LanguageSelectorProviderProps) => {
     }
 
     const updateSingleSelectedCountry = (country: CountryResponse) => {
-        setSelectedSingleCountry(country);
+        /*
+            need to rotate the object if the user clicks
+            the same country again (so it re-zooms)
+        */
+        setSelectedSingleCountry({} as CountryResponse);
+        setTimeout(() => {
+            setSelectedSingleCountry(country);
+        }, 50);
     }
 
     const updateCountries = (countryList: CountryResponse[]) => {

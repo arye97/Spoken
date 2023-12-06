@@ -15,7 +15,7 @@ import {
 } from "../../utils/constants";
 import {CountryResponse, IMapControlButton, MapButtonGroups} from "../../utils/types";
 import {useAppState} from "../../providers/AppState.provider";
-import {getBoundsOfCountries} from "../../utils/map.utils";
+import {calculateZoom, getBoundsOfCountries} from "../../utils/map.utils";
 
 interface MapProps {}
 
@@ -124,10 +124,6 @@ const Map = (props: MapProps) => {
 
     useEffect(() => {
         if (!languageContext.selectedLanguage.name) return;
-        if (languageContext.selectedLanguage.name === DEFAULT_SELECT_VALUE) {
-            mapReset();
-            return;
-        }
         setCanRotate(false);
         if (map.current?.loaded() && languageContext.selectedLanguage.name) {
             dyeCountriesByLanguage(languageContext.selectedLanguage.name);
@@ -155,22 +151,6 @@ const Map = (props: MapProps) => {
         flyToSelectedCountry(country.coords.lat, country.coords.lng, calculateZoom(country));
     }
 
-    const calculateZoom = (country: CountryResponse): number => {
-
-        // Max Area is Russia
-        const MAX_AREA = 16376870;
-
-        const percentage = MAX_AREA / country.area;
-
-        const zoom = Math.log2(percentage);
-        if (zoom < 1) {
-            return zoom + 2;
-        }
-        return zoom;
-    }
-
-
-
     const dyeCountriesByLanguage = (language: string) => {
         if (!map.current || !language || language === DEFAULT_SELECT_VALUE) return;
         const countryStops = [...DEFAULT_COUNTRY_STOPS];
@@ -185,7 +165,6 @@ const Map = (props: MapProps) => {
             if (countries.length > 1) {
                 map.current?.setFilter('country-boundaries', countryStops);
                 const bounds = getBoundsOfCountries(countries);
-                console.log(bounds);
                 map.current?.fitBounds(bounds as LngLatBoundsLike);
             } else {
                 dyeCountry(countries[0]);
@@ -207,7 +186,7 @@ const Map = (props: MapProps) => {
                     type: 'fill',
                     paint: {
                         'fill-color': '#d2361e',
-                        'fill-opacity': 0.5,
+                        'fill-opacity': 0.8,
                     }
                 },
                 'country-label'
