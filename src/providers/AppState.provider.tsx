@@ -25,12 +25,6 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
         setButtonGroupsMap(newGroup);
     }
 
-    const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
-        console.log(buttonGroup)
-        if (!buttonGroupsMap.has(key) || !buttonGroupsMap.get(key)) {
-            buttonGroupsMap.set(key, buttonGroup);
-        }
-    }
 
     const ctx = {
         addMapButtonGroup,
