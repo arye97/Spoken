@@ -16,7 +16,7 @@ const MapButtons = (props: MapButtonsProps) => (
               props.buttons.map((button) => {
                   // Todo: the key here wont allow for multiple of the same icon
                   return (
-                    <MapButton icon={button.icon} callbackMethod={button.callbackMethod}/>
+                      <MapButton key={button.icon} icon={button.icon} callbackMethod={button.callbackMethod}/>
                   );
               })
           : null

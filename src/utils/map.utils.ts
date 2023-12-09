@@ -1,4 +1,5 @@
 import {CountryResponse} from "./types";
+import mapboxgl, {LngLatBounds} from "mapbox-gl";
 
 
 /**
@@ -39,6 +40,31 @@ export const findCenterOfCountries = (countryData: CountryResponse[]): { lat: nu
 
 }
 
+export const calculateZoom = (country: CountryResponse): number => {
+    // Max Area is Russia
+    const MAX_AREA = 16376870;
+
+    const percentage = MAX_AREA / country.area;
+
+    const latZoom = Math.round(Math.log10(Math.abs(
+        country.coords.lat === 0 ?
+            1 : country.coords.lat
+    )));
+
+    const zoom = Math.log2(percentage) - (latZoom / 2);
+    return Math.max(zoom, 2);
+}
+
+export const formatPopCount = (pop: number) => {
+    if (pop < 1.0e+6) {
+        return (Math.abs(Number(pop)) / 1.0e+3).toFixed(2) + "K";
+    } else if (pop >= 1.0e+9) {
+        return (Math.abs(Number(pop)) / 1.0e+9).toFixed(2) + "B";
+    } else {
+        return (Math.abs(Number(pop)) / 1.0e+6).toFixed(2) + "M";
+    }
+}
+
 export const multiCSSHandler = (classes: string[], styles: any) => {
     return classes.map((cssClass: string) => {
         return styles[cssClass]
@@ -48,4 +74,20 @@ export const multiCSSHandler = (classes: string[], styles: any) => {
 
 export const goToUrl = (url: string) => {
     window.open(url, "_blank");
+}
+
+export const getBoundsOfCountries = (countries: CountryResponse[]): LngLatBounds => {
+    const coords = countries.map(country => new mapboxgl.LngLat(country.coords.lng, country.coords.lat));
+
+    const southWestLat = Math.max(Math.min(...coords.map(coord => coord.lat)) - 10, -90);
+    const southWestLng = Math.max(Math.min(...coords.map(coord => coord.lng)) - 10, -90);
+
+    const northEastLat = Math.min(Math.max(...coords.map(coord => coord.lat)) + 10, 90);
+    const northEastLng = Math.min(Math.max(...coords.map(coord => coord.lng)) + 10, 90);
+
+    const southWestBounds = new mapboxgl.LngLat(southWestLng, southWestLat);
+    const northEastBounds = new mapboxgl.LngLat(northEastLng, northEastLat);
+
+
+    return new mapboxgl.LngLatBounds(southWestBounds, northEastBounds);
 }
