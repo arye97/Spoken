@@ -6,7 +6,6 @@ import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 import testImage from './germany-test-photo.jpg';
-import {log} from "util";
 
 interface CountryDataBoxProps {
     countryData: CountryResponse
@@ -32,7 +31,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     useEffect(() => {
-        // getPhotoUrl().then();
+        getPhotoUrl().then();
     }, []);
 
     useEffect(() => {
@@ -47,7 +46,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     const getPhotoUrl = async () => {
-        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.nativeName}&client_id=${accessToken}`;
+        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.official}&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
         });
@@ -56,9 +55,10 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
             data => {
                 if (data) {
                     setPhotoUrl(data.urls.small);
+                    console.log(data)
                     setImageCredits({
                        name: data.user.name,
-                       url: data.user.links.html
+                       url: data.user.links.html + '?utm_source=Spoken&utm_medium=referral'
                     });
                     downloadPhoto(data.links.download_location);
                 }
