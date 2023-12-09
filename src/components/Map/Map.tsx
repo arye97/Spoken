@@ -80,9 +80,8 @@ const Map = (props: MapProps) => {
         if (map.current) return; // initialize map only once
 
         setIsLoading(true);
-
         updateSideButtons();
-
+      
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -99,6 +98,7 @@ const Map = (props: MapProps) => {
         });
 
         map.current.on('drag', () => {
+            console.log('here')
             setCanRotate(false);
         });
 
@@ -169,7 +169,6 @@ const Map = (props: MapProps) => {
             } else {
                 dyeCountry(countries[0]);
             }
-
         });
 
         resetMapDataSources();

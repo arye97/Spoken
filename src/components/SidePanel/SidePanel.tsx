@@ -18,7 +18,7 @@ const SidePanel = (props: SidePanelProps) => {
         MapButtonGroups.MapControls,
         MapButtonGroups.SidePanelControls
     ];
-
+  
     const [sidePanelViewState, setSidePanelViewState] = useState<SidePanelState>(SidePanelState.Closed);
 
     useEffect(() => {
@@ -26,6 +26,7 @@ const SidePanel = (props: SidePanelProps) => {
             const buttons: IMapControlButton[] = [
                 {
                     icon: 'flag',
+
                     callbackMethod: () => {
                         setSidePanelViewState(SidePanelState.CountryListData);
                     }
