@@ -6,9 +6,9 @@ import AppStateProvider from "../../providers/AppState.provider";
 import CountriesListContainer from "../CountriesListContainer/CountriesListContainer";
 import SidePanel from "../SidePanel/SidePanel";
 import MapButtons from "../MapButtons/MapButtons";
+import SearchBox from "../SearchBox/SearchBox";
 
 const App = () => {
-
     return (
         <div className="App">
             <AppStateProvider>

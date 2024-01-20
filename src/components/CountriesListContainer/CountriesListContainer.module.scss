@@ -5,7 +5,9 @@
   flex-direction: column;
   overflow: auto;
   padding-bottom: 120px;
-  height: 100vh;
+  max-height: 100vh;
+  height: 100%;
+  margin-left: 64px;
 }
 
 .container {

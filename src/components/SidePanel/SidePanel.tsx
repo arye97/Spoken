@@ -64,14 +64,17 @@ const SidePanel = (props: SidePanelProps) => {
                         if (!group) return;
                         return (
                             <div key={key}>
-                                <MapButtons buttons={group}/>
+                                {
+                                    !appState.searchBoxIsOpen ? <MapButtons buttons={group}/> : null
+                                }
+
                             </div>
                         )
                     })
                 }
             </div>
             {
-                sidePanelViewState !== SidePanelState.Closed &&
+                sidePanelViewState !== SidePanelState.Closed && !appState.searchBoxIsOpen &&
                 <div>
                     {
                         sidePanelViewState === SidePanelState.CountryListData ?

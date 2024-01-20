@@ -3,7 +3,10 @@ import {IMapControlButton, MapButtonGroups} from "../utils/types";
 
 export interface AppStateContextType {
     addMapButtonGroup: (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => void,
-    buttonGroupsMap: Record<MapButtonGroups, IMapControlButton[]>
+    buttonGroupsMap: Record<MapButtonGroups, IMapControlButton[]>,
+    openSearchBox: () => void,
+    closeSearchBox: () => void,
+    searchBoxIsOpen: boolean
 }
 
 export interface AppStateProviderProps {
@@ -16,6 +19,8 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
 
     const [buttonGroupsMap, setButtonGroupsMap] = useState<Record<MapButtonGroups, IMapControlButton[]>>({} as Record<MapButtonGroups, IMapControlButton[]>);
 
+    const [searchBoxIsOpen, setSearchBoxIsOpen] = useState<boolean>(false);
+
     const addMapButtonGroup = (key: MapButtonGroups, buttonGroup: IMapControlButton[]) => {
         if (buttonGroup.length < 1 || ( buttonGroupsMap[key] && buttonGroupsMap[key].length === buttonGroup.length )) return;
         const newGroup: Record<MapButtonGroups, IMapControlButton[]> = {
@@ -26,9 +31,16 @@ const AppStateProvider = ({ children }: AppStateProviderProps) => {
     }
 
 
+    const openSearchBox = () => { setSearchBoxIsOpen(true); }
+    const closeSearchBox = () => { setSearchBoxIsOpen(false); }
+
+
     const ctx = {
         addMapButtonGroup,
-        buttonGroupsMap
+        buttonGroupsMap,
+        openSearchBox,
+        closeSearchBox,
+        searchBoxIsOpen
     }
 
     return (

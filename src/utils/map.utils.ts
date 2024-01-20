@@ -56,7 +56,9 @@ export const calculateZoom = (country: CountryResponse): number => {
 }
 
 export const formatPopCount = (pop: number) => {
-    if (pop < 1.0e+6) {
+    if (pop < 1.0e+3) {
+        return pop;
+    } else if (pop < 1.0e+6) {
         return (Math.abs(Number(pop)) / 1.0e+3).toFixed(2) + "K";
     } else if (pop >= 1.0e+9) {
         return (Math.abs(Number(pop)) / 1.0e+9).toFixed(2) + "B";

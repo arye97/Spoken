@@ -1,22 +1,24 @@
 import React, {useState} from 'react';
 import styles from './Header.module.scss';
 import SelectDropdown from "../SelectDropdown/SelectDropdown";
-import {goToUrl, multiCSSHandler} from "../../utils/map.utils";
-import {useAppState} from "../../providers/AppState.provider";
-import languageStoreProvider, {useLanguageSelection} from "../../providers/LanguageStore.provider";
-import {WIKIPEDIA_LINK} from "../../utils/constants";
+import { useAppState } from "../../providers/AppState.provider";
+import { useLanguageSelection } from "../../providers/LanguageStore.provider";
+import SearchBox from "../SearchBox/SearchBox";
 
 interface HeaderProps {}
 
 const Header = () => {
-
-    const [showSearch, setShowSearch] = useState<boolean>(false);
 
     const appState = useAppState();
     const languageSelection = useLanguageSelection();
 
     return (
         <div className={styles['container']}>
+            {
+                !!appState.searchBoxIsOpen ?
+                    <SearchBox />
+                    : null
+            }
             <div className={styles['header-position']}>
                 <div className={styles['menu-layout']}>
                     <h1 className={styles['header']}>Spoken</h1>
@@ -28,12 +30,13 @@ const Header = () => {
                         </div>
                     }
                     <div className={styles['search-container']}>
-                        <button disabled={!languageSelection.selectedLanguage.name} className={styles['header-button']} onClick={() => { goToUrl(
-                            WIKIPEDIA_LINK(languageSelection.selectedLanguage.name)
-                        )}} type="submit" name="submit"><i className="material-symbols-outlined">search</i></button>
+                        <button className={styles['header-button']} onClick={() => {
+                            appState.openSearchBox();
+                        }} type="submit" name="submit"><i className="material-symbols-outlined">search</i></button>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

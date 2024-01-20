@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import styles from './CountryDataBox.module.scss';
-import {formatPopCount, goToUrl, multiCSSHandler} from "../../utils/map.utils";
+import {formatPopCount,  multiCSSHandler} from "../../utils/map.utils";
 import {CountryResponse} from "../../utils/types";
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-
-import testImage from './germany-test-photo.jpg';
 
 interface CountryDataBoxProps {
     countryData: CountryResponse
@@ -46,7 +44,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     const getPhotoUrl = async () => {
-        const url = `https://api.unsplash.com/photos/random?query=${props.countryData.name.official}&client_id=${accessToken}`;
+        const url = `https://api.unsplash.com/photos/random?query=${ props.countryData.name.common }&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
         });
@@ -55,7 +53,6 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
             data => {
                 if (data) {
                     setPhotoUrl(data.urls.small);
-                    console.log(data)
                     setImageCredits({
                        name: data.user.name,
                        url: data.user.links.html + '?utm_source=Spoken&utm_medium=referral'
@@ -78,22 +75,25 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
                 { formatPopCount(props.countryData.population) }
             </h2>
             <hr/>
-            {
-                photoUrl ?
-                    <div>
-                        <img className={styles['cover']} src={photoUrl} alt={'not loaded'}/>
-                        {
-                            imageCredits ?
+            <div className={styles['loader']}>
+                {
+                    photoUrl ?
+                        <div>
+                            <img className={styles['cover']} src={photoUrl} alt={'not loaded'}/>
+                            {
+                                imageCredits ?
                                     <a className={styles['credits-container']} href={imageCredits.url}>
                                         Photo by {imageCredits?.name} on Unsplash
                                     </a>
-                                 : null
-                        }
-                    </div>:
-                    <div className={styles['spinner']}>
-                        <LoadingSpinner  />
-                    </div>
-            }
+                                    : null
+                            }
+                        </div>:
+                        <div className={styles['spinner']}>
+                            <LoadingSpinner  />
+                        </div>
+                }
+            </div>
+
 
         </div>
     );

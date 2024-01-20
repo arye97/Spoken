@@ -9,6 +9,8 @@
   border: 2px solid;
   font-family: Lemonmilk;
   font-size: x-large;
+  text-overflow: ellipsis;
+  padding: 16px;
 }
 
 .select-dropdown::placeholder {
@@ -55,3 +57,9 @@ div .search-option:active {
   color: #F0DBAF;
 }
 
+.select-position {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-bar-bg-color) var(--scroll-bar-color);
+  }
+}

@@ -5,6 +5,8 @@
   border-radius: 16px;
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+  text-overflow: ellipsis;
+  z-index: 1;
 }
 
 .databox-container:hover {
@@ -20,12 +22,12 @@
 }
 
 .title {
+  text-overflow: ellipsis;
   max-width: 300px;
   font-family: Lemonmilk;
   font-size: small;
   color: #F0DBAF;
   overflow: hidden;
-  text-overflow: ellipsis;
   text-align: center;
   margin-top: 4px;
 }
@@ -41,8 +43,12 @@ hr {
 }
 
 .cover {
-  min-width: 300px;
-  min-height: 209px;
+  max-width: calc(100vw - 128px);
+}
+
+.loader {
+  min-height: 150px;
+  min-width: 290px;
 }
 
 .spinner {
@@ -57,7 +63,6 @@ hr {
 }
 
 .cover img {
-  min-width: 300px;
   min-height: 150px;
   max-height: 150px;
   width: 300px;
@@ -66,10 +71,10 @@ hr {
   margin: 0;
   padding: 0;
   display: block;
+  max-width: 100%;
 }
 
 .credits-container {
-  width: 300px;
   background-color: #b56576;
   color: #F0DBAF;
   font-family: Lemonmilk;

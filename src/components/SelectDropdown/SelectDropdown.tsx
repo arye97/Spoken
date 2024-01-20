@@ -3,12 +3,14 @@ import styles from './SelectDropdown.module.scss';
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import {DEFAULT_SELECT_VALUE} from "../../utils/constants";
 import {multiCSSHandler} from "../../utils/map.utils";
-import {useOutsideAlerter} from "../../providers/AppState.provider";
+import {useAppState, useOutsideAlerter} from "../../providers/AppState.provider";
 import {Simulate} from "react-dom/test-utils";
 
 interface SelectDropdownProps {}
 
 const SelectDropdown = (props: SelectDropdownProps) => {
+
+    const appState = useAppState();
 
     const languageContext = useLanguageSelection();
 
@@ -28,9 +30,11 @@ const SelectDropdown = (props: SelectDropdownProps) => {
 
         const selected = formJson.searchQuery as string;
         setSearchEntry(formJson.searchQuery as string);
+
         if (dropdownOptions.find(lang => lang.toLowerCase() === selected.toLowerCase())) {
             languageContext.updateSelectedLanguage({name: selected.toLowerCase(), cca3: ''});
             setShowOptions(false);
+            appState.closeSearchBox();
         } else {
             setShowOptions(true);
         }
@@ -57,6 +61,7 @@ const SelectDropdown = (props: SelectDropdownProps) => {
         if (searchBox) searchBox.value  = !showOptions ? "" : lang;
         languageContext.updateSelectedLanguage({name: lang, cca3: ''});
         setShowOptions(false);
+        appState.closeSearchBox();
     }
 
     const handleDropdownView = (show: boolean) => {
