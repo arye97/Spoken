@@ -4,15 +4,17 @@
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
   text-overflow: ellipsis;
   z-index: 1;
+  border: thick outset #6d597a;
 }
 
 .databox-container:hover {
+  transform: scale(1.05);
+  border: thick solid #b56576;
   background-color: #6d597a;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+  box-shadow: #6d597a 0px 1px 4px, #F0DBAF 0px 0px 0px 3px;
 }
 
 .databox-container:active {
@@ -48,7 +50,7 @@ hr {
 
 .loader {
   min-height: 150px;
-  min-width: 290px;
+  min-width: 200px;
 }
 
 .spinner {

@@ -12,7 +12,7 @@ const SearchBox = (props: SearchBoxProps) => {
         <div className={styles['SearchBox']}>
             <div className={styles['transparent-layer']} onClick={() => appState.closeSearchBox()}/>
             <div className={styles['search-container']}>
-                <SelectDropdown />
+                <SelectDropdown showOptionsOnInit={true}/>
             </div>
         </div>
     );

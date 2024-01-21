@@ -11,6 +11,7 @@
   font-size: x-large;
   text-overflow: ellipsis;
   padding: 16px;
+  max-width: 80vw;
 }
 
 .select-dropdown::placeholder {
@@ -36,6 +37,7 @@
   overflow: auto;
   font-family: Lemonmilk;
   border-radius: 8px;
+  max-width: 80vw;
 }
 
 div .search-option:hover {

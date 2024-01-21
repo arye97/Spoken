@@ -44,7 +44,9 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     const getPhotoUrl = async () => {
-        const url = `https://api.unsplash.com/photos/random?query=${ props.countryData.name.common }&client_id=${accessToken}`;
+
+        const name = props.countryData.name.official.replaceAll(' ', '%20');
+        const url = `https://api.unsplash.com/photos/random?query=${name}&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
         });
@@ -79,7 +81,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
                 {
                     photoUrl ?
                         <div>
-                            <img className={styles['cover']} src={photoUrl} alt={'not loaded'}/>
+                            <img className={styles['cover']} src={photoUrl} alt={''}/>
                             {
                                 imageCredits ?
                                     <a className={styles['credits-container']} href={imageCredits.url}>

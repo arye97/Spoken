@@ -98,7 +98,6 @@ const Map = (props: MapProps) => {
         });
 
         map.current.on('drag', () => {
-            console.log('here')
             setCanRotate(false);
         });
 

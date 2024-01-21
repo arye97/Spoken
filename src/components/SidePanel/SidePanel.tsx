@@ -37,12 +37,6 @@ const SidePanel = (props: SidePanelProps) => {
                         setSidePanelViewState(SidePanelState.LanguageData);
                     }
                 },
-                // {
-                //     icon: 'person',
-                //     callbackMethod: () => {
-                //         console.log('person click');
-                //     }
-                // },
                 {
                     icon: 'frame_reload',
                     callbackMethod: () => {

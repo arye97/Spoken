@@ -10,7 +10,6 @@ interface HeaderProps {}
 const Header = () => {
 
     const appState = useAppState();
-    const languageSelection = useLanguageSelection();
 
     return (
         <div className={styles['container']}>

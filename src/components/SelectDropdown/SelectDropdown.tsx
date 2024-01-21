@@ -4,9 +4,10 @@ import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import {DEFAULT_SELECT_VALUE} from "../../utils/constants";
 import {multiCSSHandler} from "../../utils/map.utils";
 import {useAppState, useOutsideAlerter} from "../../providers/AppState.provider";
-import {Simulate} from "react-dom/test-utils";
 
-interface SelectDropdownProps {}
+interface SelectDropdownProps {
+    showOptionsOnInit?: boolean
+}
 
 const SelectDropdown = (props: SelectDropdownProps) => {
 
@@ -33,16 +34,24 @@ const SelectDropdown = (props: SelectDropdownProps) => {
 
         if (dropdownOptions.find(lang => lang.toLowerCase() === selected.toLowerCase())) {
             languageContext.updateSelectedLanguage({name: selected.toLowerCase(), cca3: ''});
-            setShowOptions(false);
+            handleDropdownView(false);
             appState.closeSearchBox();
         } else {
-            setShowOptions(true);
+            handleDropdownView(true);
         }
     }
 
     useEffect(() => {
-        handleDropdownView(false);
-    }, [clickedOutside]);
+        if (props.showOptionsOnInit) {
+            handleDropdownView(true);
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!props.showOptionsOnInit) {
+            handleDropdownView(false);
+        }
+    }, [clickedOutside, props.showOptionsOnInit]);
 
     useEffect(() => {
         setHasEntry(true);
@@ -60,11 +69,12 @@ const SelectDropdown = (props: SelectDropdownProps) => {
         const searchBox = document.getElementById('search-box') as HTMLInputElement;
         if (searchBox) searchBox.value  = !showOptions ? "" : lang;
         languageContext.updateSelectedLanguage({name: lang, cca3: ''});
-        setShowOptions(false);
+        handleDropdownView(false);
         appState.closeSearchBox();
     }
 
     const handleDropdownView = (show: boolean) => {
+        console.log(show);
         setShowOptions(show);
     }
 
