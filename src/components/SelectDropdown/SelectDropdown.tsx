@@ -74,14 +74,17 @@ const SelectDropdown = (props: SelectDropdownProps) => {
     }
 
     const handleDropdownView = (show: boolean) => {
-        console.log(show);
         setShowOptions(show);
     }
 
     return (
         <div className={styles['select-position']} >
             <form id="form" onSubmit={handleSubmit} >
-                <input id="search-box" onChange={handleSubmit} onClick={(() => { handleDropdownView(!showOptions) })} placeholder={DEFAULT_SELECT_VALUE} autoComplete={'off'} name="searchQuery" className={multiCSSHandler(['select-dropdown', 'arrow'], styles)}/>
+                <input id="search-box" onChange={handleSubmit} onClick={(() => {
+                    if (!props.showOptionsOnInit) {
+                        handleDropdownView(!showOptions)
+                    }
+                })} placeholder={DEFAULT_SELECT_VALUE} autoComplete={'off'} name="searchQuery" className={multiCSSHandler(['select-dropdown', 'arrow'], styles)}/>
                 {
                     showOptions || (showOptions && searchEntry.length > 0) ?
                         <div className={styles['options-container']} id={"selectedLanguage"} ref={optionsRef}>

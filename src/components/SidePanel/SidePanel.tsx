@@ -47,7 +47,7 @@ const SidePanel = (props: SidePanelProps) => {
             setSidePanelViewState(SidePanelState.CountryListData);
             appState.addMapButtonGroup(MapButtonGroups.SidePanelControls, buttons);
         }
-    }, [languageState.selectedLanguage]);
+    }, [languageState.selectedLanguage, appState]);
 
     return (
         <div className={styles['side-panel']}>

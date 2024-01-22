@@ -11,11 +11,17 @@ body {
     box-sizing: border-box;
 }
 
-/*@font-face {*/
-/*    font-family: "Augustus";*/
-/*    src: local("Augustus"),*/
-/*    url(../../assets/fonts/augustus.ttf) format("truetype");*/
-/*}*/
+@font-face {
+    font-family: "Augustus";
+    src: local("Augustus"),
+    url(./assets/fonts/augustus.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Fistalle";
+    src: local("Fistalle"),
+    url(./assets/fonts/Fistalle.ttf) format("truetype");
+}
 
 @font-face {
     font-family: "Vegan";

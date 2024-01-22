@@ -1,6 +1,6 @@
 import {Context, createContext, useContext, useEffect, useState} from "react";
 import {CountryResponse, ILanguage} from "../utils/types";
-import {fetchAllLanguages, fetchCountriesByLanguage} from "../services/map.service";
+import {fetchAllLanguages, fetchCountriesByLanguage} from "../services/language.service";
 
 export interface LanguageStoreContextType {
     selectedLanguage: ILanguage,

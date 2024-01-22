@@ -25,13 +25,26 @@
 
 .title {
   text-overflow: ellipsis;
-  max-width: 300px;
+  max-width: 350px;
   font-family: Lemonmilk;
-  font-size: small;
+  font-size: medium;
   color: #F0DBAF;
-  overflow: hidden;
   text-align: center;
-  margin-top: 4px;
+  margin-top: 16px;
+  .flag {
+    position: relative;
+    top: -6px;
+    height: 64px;
+  }
+}
+
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap ;
+
 }
 
 .content {
@@ -60,14 +73,13 @@ hr {
 
 .title-pop-count {
   transform: scale(0.7);
-  top: 6px;
   position: relative;
 }
 
 .cover img {
   min-height: 150px;
   max-height: 150px;
-  width: 300px;
+  width: 350px;
   object-fit: cover;
   overflow: hidden;
   margin: 0;

@@ -45,7 +45,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
 
     const getPhotoUrl = async () => {
 
-        const name = props.countryData.name.official.replaceAll(' ', '%20');
+        const name = props.countryData.name.common.replaceAll(' ', ',');
         const url = `https://api.unsplash.com/photos/random?query=${name}&client_id=${accessToken}`;
         const response = await fetch(url, {
             method: 'GET'
@@ -68,23 +68,27 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     return (
-        <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container', 'cover'], styles)}>
-            <h2 className={styles['title']}>
-                { props.countryData.name.common } |
-                <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
-                    record_voice_over
-                </span>
-                { formatPopCount(props.countryData.population) }
-            </h2>
+        <div onClick={() => { handleCountrySelection() } } className={multiCSSHandler(['databox-container'], styles)}>
+                <h2 className={styles['title']}>
+                    <img src={props.countryData.flags.svg} alt={'flag'} className={styles['flag']}/>
+                    <div className={styles['title-container']}>
+                        { props.countryData.name.common } |
+                        <span className={styles['title-pop-count'] + " material-symbols-outlined"}>
+                            record_voice_over
+                        </span>
+                        { formatPopCount(props.countryData.population) }
+                    </div>
+
+                </h2>
             <hr/>
-            <div className={styles['loader']}>
+            <div className={styles['loader'] + ' ' + styles['cover']}>
                 {
                     photoUrl ?
                         <div>
                             <img className={styles['cover']} src={photoUrl} alt={''}/>
                             {
                                 imageCredits ?
-                                    <a className={styles['credits-container']} href={imageCredits.url}>
+                                    <a className={styles['credits-container']} href={imageCredits.url} target={'_blank'}>
                                         Photo by {imageCredits?.name} on Unsplash
                                     </a>
                                     : null

@@ -11,26 +11,7 @@ interface CountriesContainerProps {}
 
 const CountriesListContainer = (props: CountriesContainerProps) => {
 
-    const appState = useAppState();
-
     const languageState = useLanguageSelection();
-
-    const [canShowCountryList, setCanShowCountryList] = useState<boolean>(true);
-
-    useEffect(() => {
-        if (languageState.countries.length > 0) {
-            setCanShowCountryList(true);
-        }
-    }, [languageState.countries]);
-
-    const resetCountries = () => {
-        languageState.updateCountries([]);
-        languageState.updateSingleSelectedCountry({} as CountryResponse);
-    }
-
-    const handleCountriesList = (canShow: boolean): void => {
-        setCanShowCountryList(canShow);
-    }
 
     return (
             <div className={multiCSSHandler(['container'], styles)}>
