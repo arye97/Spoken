@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/Spoken/static/css/main.3b589f0d.css",
+    "main.js": "/Spoken/static/js/main.d6fee53a.js",
+    "static/js/787.6db61ea2.chunk.js": "/Spoken/static/js/787.6db61ea2.chunk.js",
+    "static/media/VeganStylePersonalUse-5Y58.ttf": "/Spoken/static/media/VeganStylePersonalUse-5Y58.0aec18fe70f7524809cf.ttf",
+    "static/media/augustus.ttf": "/Spoken/static/media/augustus.aa7cd683f9ffe9e4e256.ttf",
+    "static/media/Fistalle.ttf": "/Spoken/static/media/Fistalle.5003d8bf6b2ae0a95427.ttf",
+    "static/media/LEMONMILK-Regular.otf": "/Spoken/static/media/LEMONMILK-Regular.55fc24317b9c2b507dd8.otf",
+    "index.html": "/Spoken/index.html",
+    "main.3b589f0d.css.map": "/Spoken/static/css/main.3b589f0d.css.map",
+    "main.d6fee53a.js.map": "/Spoken/static/js/main.d6fee53a.js.map",
+    "787.6db61ea2.chunk.js.map": "/Spoken/static/js/787.6db61ea2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3b589f0d.css",
+    "static/js/main.d6fee53a.js"
+  ]
+}
