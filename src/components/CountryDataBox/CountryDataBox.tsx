@@ -5,9 +5,6 @@ import {CountryResponse} from "../../utils/types";
 import {useLanguageSelection} from "../../providers/LanguageStore.provider";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
-import testImage from './germany-test-photo.jpg';
-import {log} from "util";
-
 interface CountryDataBoxProps {
     countryData: CountryResponse
 }
@@ -32,7 +29,7 @@ const CountryDataBox = (props: CountryDataBoxProps) => {
     }
 
     useEffect(() => {
-        // getPhotoUrl().then();
+        getPhotoUrl().then();
     }, []);
 
     useEffect(() => {
